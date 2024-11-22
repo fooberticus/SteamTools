@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
@@ -71,6 +72,16 @@ public final class GuiUtil {
         StringSelection stringSelection = new StringSelection(text);
         Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
         clipboard.setContents(stringSelection, null);
+    }
+
+    public static String getClipboardText() {
+        Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+        try {
+            return (String) clipboard.getContents(null).getTransferData(DataFlavor.stringFlavor);
+        } catch (Exception e) {
+            log.error("Tried to paste non-text data from clipboard as text.");
+        }
+        return "";
     }
 
     /** Call this when the app first starts to initialize the GUI with saved preferences. */

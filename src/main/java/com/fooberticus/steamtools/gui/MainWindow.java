@@ -5,20 +5,32 @@ import com.fooberticus.steamtools.models.SourceBanResponse;
 import com.fooberticus.steamtools.utils.CustomRestClient;
 import com.fooberticus.steamtools.utils.GuiUtil;
 import com.fooberticus.steamtools.utils.SteamIDUtils;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.swing.*;
 import javax.swing.GroupLayout;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.Map;
 
 /**
  * @author Fooberticus
  */
+@Slf4j
 public class MainWindow extends JFrame {
 
     CustomRestClient client = new CustomRestClient();
 
     public MainWindow() {
         initComponents();
+        statusTextArea.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getButton() == MouseEvent.BUTTON3) {
+                    statusTextArea.setText(GuiUtil.getClipboardText());
+                }
+            }
+        });
     }
 
     public static void startMainWindow() {
