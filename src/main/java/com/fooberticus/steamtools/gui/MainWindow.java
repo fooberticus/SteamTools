@@ -26,7 +26,8 @@ public class MainWindow extends JFrame {
         statusTextArea.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                if (e.getButton() == MouseEvent.BUTTON3) {
+                super.mouseClicked(e);
+                if (e.getButton() == MouseEvent.BUTTON2) {
                     statusTextArea.setText(GuiUtil.getClipboardText());
                 }
             }
