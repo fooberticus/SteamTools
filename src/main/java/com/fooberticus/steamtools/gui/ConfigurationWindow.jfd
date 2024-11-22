@@ -1,0 +1,71 @@
+JFDML JFormDesigner: "8.2.4.0.393" Java: "21.0.5" encoding: "UTF-8"
+
+new FormModel {
+	contentType: "form/swing"
+	root: new FormRoot {
+		add( new FormWindow( "javax.swing.JFrame", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
+			"$horizontalGroup": "par l {seq l {space :::p, par l {seq {par l {seq {space :6:6:p, comp label2:::p::p, space u:::p, comp apiKeyField::::428:x}, seq {par l {comp label1:::p::p, comp label3::l:p::p}, space :0:310:x}}, space :::p}, seq l {space :6:6:p, par l {comp label4::l:p::p, comp label5::l:p::p}, space u:::p, par l {seq {comp increaseFontButton:::p::p, space :::p, comp decreaseFontButton:::p::p}, comp changeThemeButton:::p::p}, space ::303:x}}}, seq t {space ::290:x, comp saveButton:::p::p, space u:::p, comp closeButton:::p::p, space :::p}}"
+			"$verticalGroup": "par l {seq l {space :::p, comp label1:::p::p, space u:::p, par b {comp label2::b:p::p, comp apiKeyField::b:p::p}, space s:::p, comp label3:::p::p, space u:::p, par b {comp label4::b:p::p, comp increaseFontButton::b:p::p, comp decreaseFontButton::b:p::p}, space u:::p, par b {comp label5::b:p::p, comp changeThemeButton::b:p::p}, space ::109:x, par b {comp closeButton::b:p::p, comp saveButton::b:p::p}, space :::p}}"
+		} ) {
+			name: "this"
+			"defaultCloseOperation": 2
+			"visible": true
+			"title": "Settings"
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label1"
+				"text": "Steam History API Settings"
+				"$client.FlatLaf.styleClass": "large"
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label2"
+				"text": "API Key"
+				"$client.FlatLaf.styleClass": "small"
+				"font": new java.awt.Font( "Segoe UI", 0, 12 )
+			} )
+			add( new FormComponent( "javax.swing.JTextField" ) {
+				name: "apiKeyField"
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label3"
+				"text": "Appearance"
+				"$client.FlatLaf.styleClass": "large"
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label4"
+				"text": "Font Size"
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "increaseFontButton"
+				"text": "+"
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "increaseFontSize", false ) )
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "decreaseFontButton"
+				"text": "-"
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "decreaseFontSize", false ) )
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label5"
+				"text": "Theme"
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "changeThemeButton"
+				"text": "Change Theme"
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "changeTheme", false ) )
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "closeButton"
+				"text": "Close"
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "close", false ) )
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "saveButton"
+				"text": "Save"
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "saveSettings", false ) )
+			} )
+		}, new FormLayoutConstraints( null ) {
+			"location": new java.awt.Point( 0, 0 )
+			"size": new java.awt.Dimension( 400, 300 )
+		} )
+	}
+}
