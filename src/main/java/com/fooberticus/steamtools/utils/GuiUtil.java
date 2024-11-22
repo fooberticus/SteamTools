@@ -26,13 +26,13 @@ import java.util.prefs.Preferences;
 public final class GuiUtil {
 
     public static final String APPLICATION_NAME = "Steam Tools";
-    public static final String DEFAULT_THEME = "Nord";
+    public static final String DEFAULT_THEME = "Spacegray";
     private static final String NAMESPACE = "fooberticus.SteamTools";
     private static final int DEFAULT_FONT_SIZE = 15;
 
+    private static final String[] themeNames;
     private static final Preferences prefs;
     private static final Map<String, Class<? extends IntelliJTheme.ThemeLaf>> themeMap;
-    private static final String[] themeNames;
     private static final Image trayIconImage;
 
     private static final String PROPERTY_FONT_SIZE = "globalFontSize";
@@ -58,6 +58,9 @@ public final class GuiUtil {
         themeMap.put("Monokai Pro", FlatMonokaiProIJTheme.class);
         themeMap.put("High Contrast", FlatHighContrastIJTheme.class);
         themeMap.put("Material Darker", FlatMaterialDarkerIJTheme.class);
+        themeMap.put("Dracula", FlatDraculaIJTheme.class);
+        themeMap.put("Vuesion", FlatVuesionIJTheme.class);
+        themeMap.put("Hiberbee", FlatHiberbeeDarkIJTheme.class);
 
         themeNames = themeMap.keySet().toArray(new String[0]);
         Arrays.sort(themeNames);
@@ -79,43 +82,46 @@ public final class GuiUtil {
         try {
             return (String) clipboard.getContents(null).getTransferData(DataFlavor.stringFlavor);
         } catch (Exception e) {
-            log.error("Tried to paste non-text data from clipboard as text.");
+            log.error("Tried to retrieve non-text data from clipboard as text.");
         }
         return "";
     }
 
-    /** Call this when the app first starts to initialize the GUI with saved preferences. */
-    public static void initGui(JFrame frame) {
+    /** Call this when the app first starts, to set up FlatLaf for the entire application. */
+    public static void initGui() {
+        FlatAnimatedLafChange.duration = 300;
+        swapTheme(getCurrentTheme());
+        UIManager.put("defaultFont", getSavedFont());
+        FlatLaf.updateUI();
+    }
+
+    /** Call this when creating a new window so the JFrame is created with saved preferences. */
+    public static void initWindow(JFrame frame, String windowLabel) {
         frame.setIconImages(FlatSVGUtils.createWindowIconImages( "/images/app_icon.svg" ));
 
-        if (getSavedWindowWidth() > 0) {
-            frame.setSize(new Dimension(getSavedWindowWidth(), getSavedWindowHeight()));
+        if (getSavedWindowWidth(windowLabel) > 0) {
+            frame.setSize(new Dimension(getSavedWindowWidth(windowLabel), getSavedWindowHeight(windowLabel)));
         }
 
         frame.addComponentListener(new ComponentAdapter() {
             public void componentResized(ComponentEvent e) {
                 Component c = (Component) e.getSource();
-                saveWindowWidth(c.getWidth());
-                saveWindowHeight(c.getHeight());
+                saveWindowWidth(c.getWidth(), windowLabel);
+                saveWindowHeight(c.getHeight(), windowLabel);
             }
 
             public void componentMoved(ComponentEvent e) {
                 Component c = (Component) e.getSource();
-                saveWindowX(c.getX());
-                saveWindowY(c.getY());
+                saveWindowX(c.getX(), windowLabel);
+                saveWindowY(c.getY(), windowLabel);
             }
         });
 
-        if (getSavedWindowX() < 0) {
+        if (getSavedWindowX(windowLabel) < 0) {
             frame.setLocationRelativeTo(null);
         } else {
-            frame.setLocation(getSavedWindowX(), getSavedWindowY());
+            frame.setLocation(getSavedWindowX(windowLabel), getSavedWindowY(windowLabel));
         }
-
-        FlatAnimatedLafChange.duration = 300;
-        swapTheme(getCurrentTheme());
-        UIManager.put("defaultFont", getSavedFont());
-        FlatLaf.updateUI();
     }
 
     /** Display a notification using the native System Tray. */
@@ -174,15 +180,25 @@ public final class GuiUtil {
 
     /* THEME UTILITIES */
 
-    public static String[] getThemeNames() {
-        return themeNames;
+    public static void showThemeChangeDialog() {
+        String themeName = (String) JOptionPane.showInputDialog(
+                null,
+                "Choose theme:",
+                "Change Theme",
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                themeNames,
+                getCurrentTheme());
+        if (themeName != null) {
+            updateTheme(themeName);
+        }
     }
 
-    public static String getCurrentTheme() {
+    private static String getCurrentTheme() {
         return prefs.get(PROPERTY_THEME_NAME, DEFAULT_THEME);
     }
 
-    public static void updateTheme(String themeName) {
+    private static void updateTheme(String themeName) {
         if (!themeMap.containsKey(themeName)) {
             log.error("invalid theme name passed to GuiUtil::updateTheme - {}", themeName);
             return;
@@ -204,36 +220,36 @@ public final class GuiUtil {
 
     /* MAIN WINDOW SIZE UTILITIES */
 
-    public static int getSavedWindowWidth() {
-        return prefs.getInt(PROPERTY_WINDOW_WIDTH, -1);
+    public static int getSavedWindowWidth(String windowName) {
+        return prefs.getInt(PROPERTY_WINDOW_WIDTH + windowName, -1);
     }
 
-    public static void saveWindowWidth(int width) {
-        prefs.putInt(PROPERTY_WINDOW_WIDTH, width);
+    public static void saveWindowWidth(int width, String windowName) {
+        prefs.putInt(PROPERTY_WINDOW_WIDTH + windowName, width);
     }
 
-    public static int getSavedWindowHeight() {
-        return prefs.getInt(PROPERTY_WINDOW_HEIGHT, -1);
+    public static int getSavedWindowHeight(String windowName) {
+        return prefs.getInt(PROPERTY_WINDOW_HEIGHT + windowName, -1);
     }
 
-    public static void saveWindowHeight(int height) {
-        prefs.putInt(PROPERTY_WINDOW_HEIGHT, height);
+    public static void saveWindowHeight(int height, String windowName) {
+        prefs.putInt(PROPERTY_WINDOW_HEIGHT + windowName, height);
     }
 
-    public static int getSavedWindowX() {
-        return prefs.getInt(PROPERTY_WINDOW_X, -1);
+    public static int getSavedWindowX(String windowName) {
+        return prefs.getInt(PROPERTY_WINDOW_X + windowName, -1);
     }
 
-    public static void saveWindowX(int x) {
-        prefs.putInt(PROPERTY_WINDOW_X, x);
+    public static void saveWindowX(int x, String windowName) {
+        prefs.putInt(PROPERTY_WINDOW_X + windowName, x);
     }
 
-    public static int getSavedWindowY() {
-        return prefs.getInt(PROPERTY_WINDOW_Y, -1);
+    public static int getSavedWindowY(String windowName) {
+        return prefs.getInt(PROPERTY_WINDOW_Y + windowName, -1);
     }
 
-    public static void saveWindowY(int y) {
-        prefs.putInt(PROPERTY_WINDOW_Y, y);
+    public static void saveWindowY(int y, String windowName) {
+        prefs.putInt(PROPERTY_WINDOW_Y + windowName, y);
     }
 
     /* Steam Utilities */

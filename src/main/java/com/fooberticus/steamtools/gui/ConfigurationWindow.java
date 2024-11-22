@@ -1,7 +1,3 @@
-/*
- * Created by JFormDesigner on Thu Nov 21 16:10:41 EST 2024
- */
-
 package com.fooberticus.steamtools.gui;
 
 import java.awt.*;
@@ -41,17 +37,7 @@ public class ConfigurationWindow extends JFrame {
     }
 
     private void changeTheme() {
-        String themeName = (String) JOptionPane.showInputDialog(
-                null,
-                "Choose theme:",
-                "Change Theme",
-                JOptionPane.QUESTION_MESSAGE,
-                null,
-                GuiUtil.getThemeNames(),
-                GuiUtil.getCurrentTheme());
-        if (themeName != null) {
-            GuiUtil.updateTheme(themeName);
-        }
+        GuiUtil.showThemeChangeDialog();
     }
 
     private void initComponents() {

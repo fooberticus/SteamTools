@@ -25,9 +25,10 @@ public class MainWindow extends JFrame {
         initComponents();
         statusTextArea.addMouseListener(new MouseAdapter() {
             @Override
-            public void mouseClicked(MouseEvent e) {
-                super.mouseClicked(e);
-                if (e.getButton() == MouseEvent.BUTTON2) {
+            public void mouseReleased(MouseEvent e) {
+                super.mouseReleased(e);
+                if (e.getButton() == MouseEvent.BUTTON3) {
+                    statusTextArea.requestFocusInWindow();
                     statusTextArea.setText(GuiUtil.getClipboardText());
                 }
             }
@@ -35,7 +36,7 @@ public class MainWindow extends JFrame {
     }
 
     public static void startMainWindow() {
-        GuiUtil.initGui(new MainWindow());
+        GuiUtil.initWindow(new MainWindow(), "Main");
 
         if (GuiUtil.getSavedSteamHistoryKey() == null || GuiUtil.getSavedSteamHistoryKey().isEmpty()) {
             ConfigurationWindow.startConfigurationWindow();

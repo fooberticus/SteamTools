@@ -2,6 +2,7 @@ package com.fooberticus.steamtools.gui;
 
 import com.fooberticus.steamtools.models.SourceBan;
 import com.fooberticus.steamtools.models.SourceBanResponse;
+import com.fooberticus.steamtools.utils.GuiUtil;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.swing.*;
@@ -38,7 +39,7 @@ public class CheaterResultsWindow extends JFrame {
     }
 
     public static void startCheaterResultsWindow(SourceBanResponse response, Map<Long, String> userMap) {
-        new CheaterResultsWindow(response, userMap);
+        GuiUtil.initWindow(new CheaterResultsWindow(response, userMap), "Results");
     }
 
     private void formatResults() {
