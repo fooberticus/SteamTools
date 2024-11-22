@@ -85,9 +85,8 @@ public class CheaterResultsWindow extends JFrame {
                 JTable jTable = (JTable) event.getSource();
                 Point point = event.getPoint();
                 int row = jTable.rowAtPoint(point);
-                int column = jTable.columnAtPoint(point);
                 if (event.getClickCount() == 2 && jTable.getSelectedRow() != -1) {
-                    String url = tableContents[row][column];
+                    String url = tableContents[row][4];
                     try {
                         Desktop.getDesktop().browse(new URI( url ) );
                     } catch (Exception e) {

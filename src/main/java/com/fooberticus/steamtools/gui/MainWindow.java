@@ -35,6 +35,7 @@ public class MainWindow extends JFrame {
 
     private void clear() {
         statusTextArea.setText("");
+        statusTextArea.requestFocusInWindow();
     }
 
     private void checkUsers() {
