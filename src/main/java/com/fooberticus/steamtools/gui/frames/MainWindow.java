@@ -1,6 +1,7 @@
-package com.fooberticus.steamtools.gui;
+package com.fooberticus.steamtools.gui.frames;
 
 import java.awt.*;
+
 import com.fooberticus.steamtools.models.SourceBanResponse;
 import com.fooberticus.steamtools.utils.CustomRestClient;
 import com.fooberticus.steamtools.utils.GuiUtil;
@@ -19,7 +20,7 @@ import java.util.Map;
 @Slf4j
 public class MainWindow extends JFrame {
 
-    CustomRestClient client = new CustomRestClient();
+    private final CustomRestClient client = new CustomRestClient();
 
     public MainWindow() {
         initComponents();
@@ -71,13 +72,7 @@ public class MainWindow extends JFrame {
 
         SourceBanResponse response = client.getSourceBans( userMap.keySet() );
 
-        if (response == null || response.getResponse() == null || response.getResponse().isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Checked " + userMap.size() + " users and found no cheaters.");
-            enableButtons();
-            return;
-        }
-
-        CheaterResultsWindow.startCheaterResultsWindow(response, userMap);
+        ResultsWindow.startResultsWindow(response, userMap);
 
         enableButtons();
     }

@@ -22,6 +22,11 @@ public final class SteamIDUtils {
         return null;
     }
 
+    public static String getSteamID32FromSteamID64(final Long steamID64) {
+        long steam32 = steamID64 - STEAM_64_BASE;
+        return "[U:1:" + steam32 + "]";
+    }
+
     public static String getUserNameFromLine(final String line) {
         Matcher m = USER_NAME_PATTERN.matcher(line);
         if (m.find()) {

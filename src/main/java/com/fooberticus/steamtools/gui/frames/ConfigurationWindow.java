@@ -1,4 +1,4 @@
-package com.fooberticus.steamtools.gui;
+package com.fooberticus.steamtools.gui.frames;
 
 import java.awt.*;
 import com.fooberticus.steamtools.utils.GuiUtil;
