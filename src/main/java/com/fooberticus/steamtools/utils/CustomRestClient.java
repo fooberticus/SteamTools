@@ -1,6 +1,8 @@
 package com.fooberticus.steamtools.utils;
 
 import com.fooberticus.steamtools.models.SourceBanResponse;
+import com.fooberticus.steamtools.models.SteamPlayerBansResponse;
+import com.fooberticus.steamtools.models.SteamPlayerSummaryResponse;
 import com.google.gson.Gson;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.juneau.common.internal.StringUtils;
@@ -12,6 +14,8 @@ import java.util.Set;
 public final class CustomRestClient {
 
     public static final String STEAM_HISTORY_ENDPOINT = "https://steamhistory.net/api/sourcebans";
+    public static final String STEAM_API_PLAYER_BANS_ENDPOINT = "https://api.steampowered.com/ISteamUser/GetPlayerBans/v1/";
+    public static final String STEAM_API_PLAYER_SUMMARY_ENDPOINT = "https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/";
 
     private static final Gson gson;
 
@@ -21,9 +25,20 @@ public final class CustomRestClient {
 
     public SourceBanResponse getSourceBans(Set<Long> steam64Ids) {
         String ids = StringUtils.join(steam64Ids, ",");
-        String url = STEAM_HISTORY_ENDPOINT + "?key=" + GuiUtil.getSavedSteamHistoryKey() + "&steamids=" + ids;
-        log.info("url: {}", url);
+        String url = STEAM_HISTORY_ENDPOINT + "?key=" + GuiUtil.getSavedSteamHistoryApiKey() + "&steamids=" + ids;
         return getRequest(url, SourceBanResponse.class);
+    }
+
+    public SteamPlayerBansResponse getSteamPlayerBans(Set<Long> steam64Ids) {
+        String ids = StringUtils.join(steam64Ids, ",");
+        String url = STEAM_API_PLAYER_BANS_ENDPOINT + "?key=" + GuiUtil.getSavedSteamApiKey() + "&steamids=" + ids;
+        return getRequest(url, SteamPlayerBansResponse.class);
+    }
+
+    public SteamPlayerSummaryResponse getSteamPlayerSummaries(Set<Long> steam64Ids) {
+        String ids = StringUtils.join(steam64Ids, ",");
+        String url = STEAM_API_PLAYER_SUMMARY_ENDPOINT + "?key=" + GuiUtil.getSavedSteamApiKey() + "&steamids=" + ids;
+        return getRequest(url, SteamPlayerSummaryResponse.class);
     }
 
     /** Reusable method for making GET requests.

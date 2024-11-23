@@ -1,36 +1,61 @@
 package com.fooberticus.steamtools.gui.frames;
 
 import com.fooberticus.steamtools.gui.panels.AllUsersPanel;
-import com.fooberticus.steamtools.gui.panels.CheaterResultsPanel;
-import com.fooberticus.steamtools.models.SourceBanResponse;
+import com.fooberticus.steamtools.gui.panels.CommunityBanPanel;
+import com.fooberticus.steamtools.gui.panels.VACBanPanel;
+import com.fooberticus.steamtools.models.*;
 import com.fooberticus.steamtools.utils.GuiUtil;
 
 import javax.swing.*;
 import javax.swing.GroupLayout;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
  * @author Fooberticus
  */
 public class ResultsWindow extends JFrame {
-    SourceBanResponse response;
-    Map<Long, String> userMap;
 
-    public ResultsWindow(SourceBanResponse response, Map<Long, String> userMap) {
-        this.response = response;
-        this.userMap = userMap;
-
+    public ResultsWindow(SourceBanResponse steamHistoryResponse, SteamPlayerBansResponse steamPlayerBansResponse, SteamPlayerSummaryResponse steamPlayerSummaryResponse, Map<Long, String> userMap) {
         initComponents();
 
-        if (response != null && response.getResponse() != null && !response.getResponse().isEmpty()) {
-            resultsTabbedPane.add("Cheaters", new CheaterResultsPanel(response, userMap));
+        Map<Long, SteamPlayerSummary> playerSummaryMap = new HashMap<>();
+        if (steamPlayerSummaryResponse != null
+                && steamPlayerSummaryResponse.getResponse() != null
+                && steamPlayerSummaryResponse.getResponse().players() != null
+                && !steamPlayerSummaryResponse.getResponse().players().isEmpty()) {
+            List<SteamPlayerSummary> playerSummaries = steamPlayerSummaryResponse.getResponse().players();
+            for (SteamPlayerSummary playerSummary : playerSummaries) {
+                playerSummaryMap.put( Long.valueOf(playerSummary.getSteamid()), playerSummary );
+            }
         }
 
-        resultsTabbedPane.add("All Players", new AllUsersPanel(userMap));
+        Map<Long, SteamPlayerBan> vacBannedPlayersMap  = new HashMap<>();
+        if (steamPlayerBansResponse != null
+                && steamPlayerBansResponse.getPlayers() != null
+                && !steamPlayerBansResponse.getPlayers().isEmpty()) {
+            List<SteamPlayerBan> playerBansList = steamPlayerBansResponse.getPlayers();
+            for (SteamPlayerBan playerBan : playerBansList) {
+                if (playerBan.getVACBanned() || playerBan.getNumberOfGameBans() > 0) {
+                    vacBannedPlayersMap.put( Long.valueOf( playerBan.getSteamId() ), playerBan );
+                }
+            }
+        }
+
+        if (!vacBannedPlayersMap.isEmpty()) {
+            resultsTabbedPane.add( "VAC Bans", new VACBanPanel( vacBannedPlayersMap, userMap ) );
+        }
+
+        if (steamHistoryResponse != null && steamHistoryResponse.getResponse() != null && !steamHistoryResponse.getResponse().isEmpty()) {
+            resultsTabbedPane.add("Community Bans", new CommunityBanPanel(steamHistoryResponse, userMap));
+        }
+
+        resultsTabbedPane.add("All Players", new AllUsersPanel(userMap, playerSummaryMap));
     }
 
-    public static void startResultsWindow(SourceBanResponse response, Map<Long, String> userMap) {
-        GuiUtil.initWindow( new ResultsWindow(response, userMap), "Results" );
+    public static void startResultsWindow(SourceBanResponse steamHistoryResponse, SteamPlayerBansResponse steamPlayerBansResponse, SteamPlayerSummaryResponse steamPlayerSummaryResponse, Map<Long, String> userMap) {
+        GuiUtil.initWindow( new ResultsWindow(steamHistoryResponse, steamPlayerBansResponse, steamPlayerSummaryResponse, userMap), "Results" );
     }
 
     private void initComponents() {

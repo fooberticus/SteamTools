@@ -43,6 +43,7 @@ public final class GuiUtil {
     private static final String PROPERTY_WINDOW_Y = "windowY";
 
     private static final String PROPERTY_STEAM_HISTORY_KEY = "steamHistoryKey";
+    private static final String PROPERTY_STEAM_API_KEY = "steamApiKey";
 
     static {
         prefs = Preferences.userRoot().node(NAMESPACE);
@@ -254,12 +255,20 @@ public final class GuiUtil {
 
     /* Steam Utilities */
 
-    public static String getSavedSteamHistoryKey() {
+    public static String getSavedSteamHistoryApiKey() {
         return prefs.get(PROPERTY_STEAM_HISTORY_KEY, null);
     }
 
-    public static void saveSteamHistoryKey(String key) {
+    public static void saveSteamHistoryApiKey(String key) {
         prefs.put(PROPERTY_STEAM_HISTORY_KEY, key);
+    }
+
+    public static String getSavedSteamApiKey() {
+        return prefs.get(PROPERTY_STEAM_API_KEY, null);
+    }
+
+    public static void saveSteamApiKey(String key) {
+        prefs.put(PROPERTY_STEAM_API_KEY, key);
     }
 
 }

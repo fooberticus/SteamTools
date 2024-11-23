@@ -1,7 +1,7 @@
 package com.fooberticus.steamtools.gui.panels;
 
-import com.fooberticus.steamtools.models.SteamPlayerSummary;
-import com.fooberticus.steamtools.utils.SteamIDUtils;
+import com.fooberticus.steamtools.models.SourceBan;
+import com.fooberticus.steamtools.models.SourceBanResponse;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.swing.*;
@@ -11,48 +11,61 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.net.URI;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.fooberticus.steamtools.utils.BanStates.*;
+
 @Slf4j
-public class AllUsersPanel extends BaseResultsPanel {
+public class CommunityBanPanel extends BaseResultsPanel {
 
-    public static final String STEAM_COMMUNITY_URI = "https://steamcommunity.com/profiles/";
+    private static final String STEAM_HISTORY_URI = "https://steamhistory.net/id/";
 
-    private static final String[] HEADER_ROW = {"User Name", "Steam32 ID", "Steam64 ID", "Profile Visibility", "Profile Created", "Profile URL"};
+    private static final String[] HEADER_ROW = {"User Name", "Steam64 ID", "Active Bans", "Total Bans", "Steam History"};
 
+    private final SourceBanResponse response;
     private final Map<Long, String> userMap;
-    private final Map<Long, SteamPlayerSummary> playerSummaryMap;
 
-    public AllUsersPanel(Map<Long, String> userMap, Map<Long, SteamPlayerSummary> playerSummaryMap) {
+    public CommunityBanPanel(final SourceBanResponse response, final Map<Long, String> userMap) {
         super();
+        this.response = response;
         this.userMap = userMap;
-        this.playerSummaryMap = playerSummaryMap;
         formatResults();
     }
 
     private void formatResults() {
-        String[][] tableContents = new String[userMap.size()][HEADER_ROW.length];
+        List<SourceBan> banList = response.getResponse();
+        Map<Long, List<SourceBan>> activeBanMap = new HashMap<>();
+        Map<Long, List<SourceBan>> totalBanMap = new HashMap<>();
 
-        List<Long> ids = userMap.keySet().stream().toList();
+        banList.forEach(ban -> {
+            Long id = Long.parseLong( ban.getSteamID() );
+            activeBanMap.computeIfAbsent(id, k -> new ArrayList<>());
+            totalBanMap.computeIfAbsent(id, k -> new ArrayList<>());
+
+            List<SourceBan> activeList = activeBanMap.get(id);
+            switch (ban.getCurrentState()) {
+                case PERMANENT:
+                case TEMP_BAN: activeList.add(ban); break;
+            }
+
+            List<SourceBan> totalList = totalBanMap.get(id);
+            totalList.add(ban);
+        });
+
+        String[][] tableContents = new String[totalBanMap.size()][HEADER_ROW.length];
+
+        List<Long> ids = totalBanMap.keySet().stream().toList();
 
         for (int i = 0; i < ids.size(); i++) {
             Long id = ids.get(i);
-            Long timeCreated = playerSummaryMap.get(id).getTimecreated();
-            LocalDate createdDate = null;
-            if (timeCreated != null) {
-                createdDate = Instant.ofEpochMilli(timeCreated * 1000).atZone(ZoneId.systemDefault()).toLocalDate();
-            }
             String[] values = { userMap.get(id),
-                    SteamIDUtils.getSteamID32FromSteamID64(id),
                     id.toString(),
-                    playerSummaryMap.get(id).getCommunityvisibilitystate() == 3 ? "public" : "PRIVATE",
-                    createdDate == null ? "unknown" : createdDate.toString(),
-                    STEAM_COMMUNITY_URI + id };
+                    String.valueOf( activeBanMap.get( id ).size() ),
+                    String.valueOf( totalBanMap.get( id ).size() ),
+                    STEAM_HISTORY_URI + id };
             System.arraycopy( values, 0, tableContents[i], 0, HEADER_ROW.length );
         }
 
@@ -65,6 +78,8 @@ public class AllUsersPanel extends BaseResultsPanel {
         table.setRowSorter(sorter);
 
         List<RowSorter.SortKey> sortKeys = new ArrayList<>();
+        sortKeys.add(new RowSorter.SortKey(2, SortOrder.DESCENDING));
+        sortKeys.add(new RowSorter.SortKey(3, SortOrder.DESCENDING));
         sortKeys.add(new RowSorter.SortKey(0, SortOrder.ASCENDING));
         sorter.setSortKeys(sortKeys);
 
@@ -74,7 +89,7 @@ public class AllUsersPanel extends BaseResultsPanel {
                 Point point = event.getPoint();
                 int row = jTable.rowAtPoint(point);
                 if (event.getClickCount() == 2 && jTable.getSelectedRow() != -1) {
-                    String url = (String) table.getValueAt(row, 5);
+                    String url = (String) table.getValueAt(row, 4);
                     try {
                         Desktop.getDesktop().browse(new URI( url ) );
                     } catch (Exception e) {

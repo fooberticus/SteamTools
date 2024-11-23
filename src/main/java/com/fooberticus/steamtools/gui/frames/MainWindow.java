@@ -3,6 +3,8 @@ package com.fooberticus.steamtools.gui.frames;
 import java.awt.*;
 
 import com.fooberticus.steamtools.models.SourceBanResponse;
+import com.fooberticus.steamtools.models.SteamPlayerBansResponse;
+import com.fooberticus.steamtools.models.SteamPlayerSummaryResponse;
 import com.fooberticus.steamtools.utils.CustomRestClient;
 import com.fooberticus.steamtools.utils.GuiUtil;
 import com.fooberticus.steamtools.utils.SteamIDUtils;
@@ -39,7 +41,8 @@ public class MainWindow extends JFrame {
     public static void startMainWindow() {
         GuiUtil.initWindow(new MainWindow(), "Main");
 
-        if (GuiUtil.getSavedSteamHistoryKey() == null || GuiUtil.getSavedSteamHistoryKey().isEmpty()) {
+        if (GuiUtil.getSavedSteamHistoryApiKey() == null || GuiUtil.getSavedSteamHistoryApiKey().isEmpty()
+            || GuiUtil.getSavedSteamApiKey() == null || GuiUtil.getSavedSteamApiKey().isEmpty()) {
             ConfigurationWindow.startConfigurationWindow();
         }
     }
@@ -70,9 +73,11 @@ public class MainWindow extends JFrame {
 
         disableButtons();
 
-        SourceBanResponse response = client.getSourceBans( userMap.keySet() );
+        SourceBanResponse steamHistoryResponse = client.getSourceBans( userMap.keySet() );
+        SteamPlayerBansResponse steamPlayerBansResponse = client.getSteamPlayerBans( userMap.keySet() );
+        SteamPlayerSummaryResponse steamPlayerSummaryResponse = client.getSteamPlayerSummaries( userMap.keySet() );
 
-        ResultsWindow.startResultsWindow(response, userMap);
+        ResultsWindow.startResultsWindow(steamHistoryResponse, steamPlayerBansResponse, steamPlayerSummaryResponse, userMap);
 
         enableButtons();
     }

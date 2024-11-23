@@ -16,7 +16,7 @@ public class CustomRestClientIntegrationTest {
     private CustomRestClient client = new CustomRestClient();
 
     static {
-        if (GuiUtil.getSavedSteamHistoryKey() == null || GuiUtil.getSavedSteamHistoryKey().isEmpty()) {
+        if (GuiUtil.getSavedSteamHistoryApiKey() == null || GuiUtil.getSavedSteamHistoryApiKey().isEmpty()) {
             System.out.println("YOU NEED TO CONFIGURE A STEAM HISTORY KEY");
             System.out.println("RUN THE APPLICATION TO CONFIGURE THIS VALUE");
         }
