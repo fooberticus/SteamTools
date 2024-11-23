@@ -1,6 +1,5 @@
 package com.fooberticus.steamtools.gui.frames;
 
-import java.awt.*;
 import com.fooberticus.steamtools.utils.GuiUtil;
 
 import javax.swing.*;
@@ -72,7 +71,6 @@ public class ConfigurationWindow extends JFrame {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
         // Generated using JFormDesigner non-commercial license
         label1 = new JLabel();
-        label2 = new JLabel();
         steamHistoryApiKeyField = new JTextField();
         label3 = new JLabel();
         label4 = new JLabel();
@@ -82,9 +80,9 @@ public class ConfigurationWindow extends JFrame {
         changeThemeButton = new JButton();
         closeButton = new JButton();
         saveButton = new JButton();
-        label6 = new JLabel();
-        label7 = new JLabel();
         steamApiKeyField = new JTextField();
+        label2 = new JLabel();
+        label6 = new JLabel();
 
         //======== this ========
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
@@ -93,12 +91,8 @@ public class ConfigurationWindow extends JFrame {
         var contentPane = getContentPane();
 
         //---- label1 ----
-        label1.setText("Steam History API Settings"); //NON-NLS
+        label1.setText("API Keys"); //NON-NLS
         label1.putClientProperty("FlatLaf.styleClass", "large"); //NON-NLS
-
-        //---- label2 ----
-        label2.setText("API Key"); //NON-NLS
-        label2.setFont(new Font("Segoe UI", Font.PLAIN, 12)); //NON-NLS
 
         //---- label3 ----
         label3.setText("Appearance"); //NON-NLS
@@ -130,54 +124,53 @@ public class ConfigurationWindow extends JFrame {
         saveButton.setText("Save"); //NON-NLS
         saveButton.addActionListener(e -> saveSettings());
 
-        //---- label6 ----
-        label6.setText("Steam API Settings"); //NON-NLS
-        label6.putClientProperty("FlatLaf.styleClass", "large"); //NON-NLS
+        //---- label2 ----
+        label2.setText("Steam API"); //NON-NLS
 
-        //---- label7 ----
-        label7.setText("API Key"); //NON-NLS
+        //---- label6 ----
+        label6.setText("SteamHistory API"); //NON-NLS
 
         GroupLayout contentPaneLayout = new GroupLayout(contentPane);
         contentPane.setLayout(contentPaneLayout);
         contentPaneLayout.setHorizontalGroup(
             contentPaneLayout.createParallelGroup()
                 .addGroup(contentPaneLayout.createSequentialGroup()
-                    .addContainerGap()
                     .addGroup(contentPaneLayout.createParallelGroup()
                         .addGroup(contentPaneLayout.createSequentialGroup()
-                            .addGap(6, 6, 6)
+                            .addGap(12, 12, 12)
                             .addGroup(contentPaneLayout.createParallelGroup()
+                                .addComponent(steamApiKeyField)
                                 .addGroup(contentPaneLayout.createSequentialGroup()
-                                    .addComponent(label2)
-                                    .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-                                    .addComponent(steamHistoryApiKeyField, GroupLayout.DEFAULT_SIZE, 428, Short.MAX_VALUE))
-                                .addGroup(contentPaneLayout.createSequentialGroup()
-                                    .addComponent(label7)
-                                    .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-                                    .addComponent(steamApiKeyField, GroupLayout.DEFAULT_SIZE, 428, Short.MAX_VALUE))))
-                        .addGroup(GroupLayout.Alignment.TRAILING, contentPaneLayout.createSequentialGroup()
-                            .addGroup(contentPaneLayout.createParallelGroup()
-                                .addComponent(label1)
-                                .addComponent(label6)
-                                .addComponent(label3)
-                                .addGroup(contentPaneLayout.createSequentialGroup()
-                                    .addGap(6, 6, 6)
                                     .addGroup(contentPaneLayout.createParallelGroup()
-                                        .addGroup(contentPaneLayout.createSequentialGroup()
-                                            .addComponent(label4)
-                                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                            .addComponent(increaseFontButton)
-                                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                            .addComponent(decreaseFontButton))
-                                        .addGroup(contentPaneLayout.createSequentialGroup()
-                                            .addComponent(label5)
-                                            .addGap(18, 18, 18)
-                                            .addComponent(changeThemeButton)))))
-                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 100, Short.MAX_VALUE)
+                                        .addComponent(label6)
+                                        .addComponent(label2))
+                                    .addGap(0, 0, Short.MAX_VALUE))
+                                .addComponent(steamHistoryApiKeyField)))
+                        .addGroup(GroupLayout.Alignment.TRAILING, contentPaneLayout.createSequentialGroup()
+                            .addContainerGap()
+                            .addComponent(label1)
+                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 265, Short.MAX_VALUE)
                             .addComponent(saveButton)
                             .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
                             .addComponent(closeButton)))
                     .addContainerGap())
+                .addGroup(contentPaneLayout.createSequentialGroup()
+                    .addContainerGap()
+                    .addGroup(contentPaneLayout.createParallelGroup()
+                        .addComponent(label3)
+                        .addGroup(contentPaneLayout.createSequentialGroup()
+                            .addGap(6, 6, 6)
+                            .addGroup(contentPaneLayout.createParallelGroup()
+                                .addComponent(label4)
+                                .addComponent(label5))
+                            .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+                            .addGroup(contentPaneLayout.createParallelGroup()
+                                .addGroup(contentPaneLayout.createSequentialGroup()
+                                    .addComponent(increaseFontButton)
+                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(decreaseFontButton))
+                                .addComponent(changeThemeButton))))
+                    .addContainerGap(340, Short.MAX_VALUE))
         );
         contentPaneLayout.setVerticalGroup(
             contentPaneLayout.createParallelGroup()
@@ -185,18 +178,16 @@ public class ConfigurationWindow extends JFrame {
                     .addContainerGap()
                     .addComponent(label1)
                     .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-                    .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                        .addComponent(label2)
-                        .addComponent(steamHistoryApiKeyField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                    .addGap(18, 18, 18)
-                    .addComponent(label6)
+                    .addComponent(label2)
+                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(steamApiKeyField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                     .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-                    .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                        .addComponent(label7)
-                        .addComponent(steamApiKeyField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                    .addComponent(label6)
+                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(steamHistoryApiKeyField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                     .addGap(18, 18, 18)
                     .addComponent(label3)
-                    .addGap(5, 5, 5)
+                    .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
                     .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                         .addComponent(label4)
                         .addComponent(increaseFontButton)
@@ -205,7 +196,7 @@ public class ConfigurationWindow extends JFrame {
                     .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                         .addComponent(label5, GroupLayout.PREFERRED_SIZE, 16, GroupLayout.PREFERRED_SIZE)
                         .addComponent(changeThemeButton))
-                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 135, Short.MAX_VALUE)
+                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 55, Short.MAX_VALUE)
                     .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                         .addComponent(closeButton)
                         .addComponent(saveButton))
@@ -219,7 +210,6 @@ public class ConfigurationWindow extends JFrame {
     // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables  @formatter:off
     // Generated using JFormDesigner non-commercial license
     private JLabel label1;
-    private JLabel label2;
     private JTextField steamHistoryApiKeyField;
     private JLabel label3;
     private JLabel label4;
@@ -229,8 +219,8 @@ public class ConfigurationWindow extends JFrame {
     private JButton changeThemeButton;
     private JButton closeButton;
     private JButton saveButton;
-    private JLabel label6;
-    private JLabel label7;
     private JTextField steamApiKeyField;
+    private JLabel label2;
+    private JLabel label6;
     // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
 }

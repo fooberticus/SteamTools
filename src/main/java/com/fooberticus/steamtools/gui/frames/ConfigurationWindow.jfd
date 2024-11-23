@@ -4,8 +4,8 @@ new FormModel {
 	contentType: "form/swing"
 	root: new FormRoot {
 		add( new FormWindow( "javax.swing.JFrame", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
-			"$horizontalGroup": "par l {seq {space :::p, par l {seq {space :6:6:p, par l {seq {comp label2:::p::p, space u:::p, comp steamHistoryApiKeyField::::428:x}, seq {comp label7:::p::p, space u:::p, comp steamApiKeyField::::428:x}}}, seq t {par l {comp label1:::p::p, comp label6::l:p::p, comp label3::l:p::p, seq l {space :6:6:p, par l {seq {comp label4:::p::p, space :::p, comp increaseFontButton:::p::p, space :::p, comp decreaseFontButton:::p::p}, seq l {comp label5:::p::p, space s:::p, comp changeThemeButton:::p::p}}}}, space ::100:x, comp saveButton:::p::p, space u:::p, comp closeButton:::p::p}}, space :::p}}"
-			"$verticalGroup": "par l {seq l {space :::p, comp label1:::p::p, space u:::p, par b {comp label2::b:p::p, comp steamHistoryApiKeyField::b:p::p}, space s:::p, comp label6:::p::p, space u:::p, par b {comp label7::b:p::p, comp steamApiKeyField::b:p::p}, space s:::p, comp label3:::p::p, space :p:5:p, par b {comp label4::b:p::p, comp increaseFontButton::b:p::p, comp decreaseFontButton::b:p::p}, space u:::p, par b {comp label5::b:p:16:p, comp changeThemeButton::b:p::p}, space ::135:x, par b {comp closeButton::b:p::p, comp saveButton::b:p::p}, space :::p}}"
+			"$horizontalGroup": "par l {seq l {par l {seq l {space :p:12:p, par l {comp steamApiKeyField:::::x, seq {par l {comp label6:::p::p, comp label2:::p::p}, space :0:0:x}, comp steamHistoryApiKeyField::l:::x}}, seq t {space :::p, comp label1:::p::p, space ::265:x, comp saveButton:::p::p, space u:::p, comp closeButton:::p::p}}, space :::p}, seq l {space :::p, par l {comp label3:::p::p, seq l {space :6:6:p, par l {comp label4::l:p::p, comp label5::l:p::p}, space u:::p, par l {seq {comp increaseFontButton:::p::p, space :::p, comp decreaseFontButton:::p::p}, comp changeThemeButton:::p::p}}}, space ::340:x}}"
+			"$verticalGroup": "par l {seq l {space :::p, comp label1:::p::p, space u:::p, comp label2:::p::p, space :::p, comp steamApiKeyField:::p::p, space u:::p, comp label6:::p::p, space :::p, comp steamHistoryApiKeyField:::p::p, space s:::p, comp label3:::p::p, space u:::p, par b {comp label4::b:p::p, comp increaseFontButton::b:p::p, comp decreaseFontButton::b:p::p}, space u:::p, par b {comp label5::b:p:16:p, comp changeThemeButton::b:p::p}, space ::55:x, par b {comp closeButton::b:p::p, comp saveButton::b:p::p}, space :::p}}"
 		} ) {
 			name: "this"
 			"defaultCloseOperation": 2
@@ -13,13 +13,8 @@ new FormModel {
 			"title": "Settings"
 			add( new FormComponent( "javax.swing.JLabel" ) {
 				name: "label1"
-				"text": "Steam History API Settings"
+				"text": "API Keys"
 				"$client.FlatLaf.styleClass": "large"
-			} )
-			add( new FormComponent( "javax.swing.JLabel" ) {
-				name: "label2"
-				"text": "API Key"
-				"font": new java.awt.Font( "Segoe UI", 0, 12 )
 			} )
 			add( new FormComponent( "javax.swing.JTextField" ) {
 				name: "steamHistoryApiKeyField"
@@ -62,21 +57,20 @@ new FormModel {
 				"text": "Save"
 				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "saveSettings", false ) )
 			} )
-			add( new FormComponent( "javax.swing.JLabel" ) {
-				name: "label6"
-				"text": "Steam API Settings"
-				"$client.FlatLaf.styleClass": "large"
-			} )
-			add( new FormComponent( "javax.swing.JLabel" ) {
-				name: "label7"
-				"text": "API Key"
-			} )
 			add( new FormComponent( "javax.swing.JTextField" ) {
 				name: "steamApiKeyField"
 			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label2"
+				"text": "Steam API"
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label6"
+				"text": "SteamHistory API"
+			} )
 		}, new FormLayoutConstraints( null ) {
 			"location": new java.awt.Point( 0, 0 )
-			"size": new java.awt.Dimension( 400, 380 )
+			"size": new java.awt.Dimension( 430, 326 )
 		} )
 	}
 }

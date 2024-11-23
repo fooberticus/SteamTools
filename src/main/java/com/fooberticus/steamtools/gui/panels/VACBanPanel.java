@@ -22,7 +22,7 @@ public class VACBanPanel extends BaseResultsPanel {
     private Map<Long, SteamPlayerBan> playerBanMap;
     private Map<Long, String> userMap;
 
-    private static final String[] HEADER_ROW = {"User Name", "Steam64 ID", "VAC Banned", "VAC Bans", "Days Since Last", "Game Bans", "Profile URL"};
+    private static final String[] HEADER_ROW = {"User Name", "Steam64 ID", "VAC Banned", "VAC Bans", "Game Bans", "Days Since Last", "Profile URL"};
 
     public VACBanPanel(Map<Long, SteamPlayerBan> playerBanMap, Map<Long, String> userMap) {
         super();
@@ -42,8 +42,8 @@ public class VACBanPanel extends BaseResultsPanel {
                     id.toString(),
                     playerBanMap.get(id).getVACBanned().toString(),
                     playerBanMap.get(id).getNumberOfVACBans().toString(),
-                    playerBanMap.get(id).getDaysSinceLastBan().toString(),
                     playerBanMap.get(id).getNumberOfGameBans().toString(),
+                    playerBanMap.get(id).getDaysSinceLastBan().toString(),
                     STEAM_COMMUNITY_URI + id };
             System.arraycopy( values, 0, tableContents[i], 0, HEADER_ROW.length );
         }
