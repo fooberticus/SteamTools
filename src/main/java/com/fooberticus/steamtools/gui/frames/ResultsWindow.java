@@ -44,7 +44,7 @@ public class ResultsWindow extends JFrame {
         }
 
         if (!vacBannedPlayersMap.isEmpty()) {
-            resultsTabbedPane.add( "VAC Bans", new VACBanPanel( vacBannedPlayersMap, userMap ) );
+            resultsTabbedPane.add( "Steam Bans", new VACBanPanel( vacBannedPlayersMap, userMap ) );
         }
 
         if (steamHistoryResponse != null && steamHistoryResponse.getResponse() != null && !steamHistoryResponse.getResponse().isEmpty()) {
