@@ -1,0 +1,7 @@
+# jpackage
+--type app-image
+--name SteamTools
+--vendor Fooberticus
+--input jars
+--main-jar SteamTools-1.0-SNAPSHOT-jar-with-dependencies.jar
+--main-class com.fooberticus.steamtools.Main

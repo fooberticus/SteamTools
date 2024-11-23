@@ -100,7 +100,6 @@ public class MainWindow extends JFrame {
         menuItem1 = new JMenuItem();
         clearButton = new JButton();
         checkUsersButton = new JButton();
-        label1 = new JLabel();
         scrollPane1 = new JScrollPane();
         statusTextArea = new JTextArea();
 
@@ -134,10 +133,6 @@ public class MainWindow extends JFrame {
         checkUsersButton.setText("Check Users"); //NON-NLS
         checkUsersButton.addActionListener(e -> checkUsers());
 
-        //---- label1 ----
-        label1.setText("Status text"); //NON-NLS
-        label1.putClientProperty("FlatLaf.styleClass", "medium"); //NON-NLS
-
         //======== scrollPane1 ========
         {
 
@@ -150,27 +145,21 @@ public class MainWindow extends JFrame {
         contentPane.setLayout(contentPaneLayout);
         contentPaneLayout.setHorizontalGroup(
             contentPaneLayout.createParallelGroup()
-                .addGroup(contentPaneLayout.createSequentialGroup()
-                    .addContainerGap()
-                    .addGroup(contentPaneLayout.createParallelGroup()
-                        .addGroup(GroupLayout.Alignment.TRAILING, contentPaneLayout.createSequentialGroup()
-                            .addGap(0, 271, Short.MAX_VALUE)
+                .addGroup(GroupLayout.Alignment.TRAILING, contentPaneLayout.createSequentialGroup()
+                    .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.TRAILING)
+                        .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 492, Short.MAX_VALUE)
+                        .addGroup(contentPaneLayout.createSequentialGroup()
+                            .addContainerGap(277, Short.MAX_VALUE)
                             .addComponent(checkUsersButton)
                             .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-                            .addComponent(clearButton))
-                        .addGroup(contentPaneLayout.createSequentialGroup()
-                            .addComponent(label1)
-                            .addGap(0, 410, Short.MAX_VALUE))
-                        .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 486, Short.MAX_VALUE))
+                            .addComponent(clearButton)))
                     .addContainerGap())
         );
         contentPaneLayout.setVerticalGroup(
             contentPaneLayout.createParallelGroup()
                 .addGroup(GroupLayout.Alignment.TRAILING, contentPaneLayout.createSequentialGroup()
                     .addContainerGap()
-                    .addComponent(label1)
-                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                    .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 230, Short.MAX_VALUE)
+                    .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 258, Short.MAX_VALUE)
                     .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
                     .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                         .addComponent(clearButton)
@@ -189,7 +178,6 @@ public class MainWindow extends JFrame {
     private JMenuItem menuItem1;
     private JButton clearButton;
     private JButton checkUsersButton;
-    private JLabel label1;
     private JScrollPane scrollPane1;
     private JTextArea statusTextArea;
     // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on

@@ -1,0 +1,7 @@
+# jpackage
+--type msi
+--name SteamTools
+--vendor Fooberticus
+--app-image SteamTools
+--win-dir-chooser
+--win-menu

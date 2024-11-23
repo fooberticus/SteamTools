@@ -14,6 +14,7 @@ public class ConfigurationWindow extends JFrame {
         steamHistoryApiKeyField.setText(GuiUtil.getSavedSteamHistoryApiKey());
         steamApiKeyField.setText(GuiUtil.getSavedSteamApiKey());
         checkFields();
+        closeButton.requestFocusInWindow();
     }
 
     public static void startConfigurationWindow() {
