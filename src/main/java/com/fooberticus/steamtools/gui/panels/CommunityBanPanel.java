@@ -2,6 +2,7 @@ package com.fooberticus.steamtools.gui.panels;
 
 import com.fooberticus.steamtools.models.SourceBan;
 import com.fooberticus.steamtools.models.SourceBanResponse;
+import com.fooberticus.steamtools.utils.SteamIDUtils;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.swing.*;
@@ -11,6 +12,7 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.net.URI;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -23,7 +25,7 @@ public class CommunityBanPanel extends BaseResultsPanel {
 
     private static final String STEAM_HISTORY_URI = "https://steamhistory.net/id/";
 
-    private static final String[] HEADER_ROW = {"User Name", "Steam64 ID", "Active Bans", "Total Bans", "Steam History"};
+    private static final String[] HEADER_ROW = {"User Name", "Steam64 ID", "Active Bans", "Total Bans", "Last Ban Date", "Steam History"};
 
     private final SourceBanResponse response;
     private final Map<Long, String> userMap;
@@ -59,12 +61,26 @@ public class CommunityBanPanel extends BaseResultsPanel {
 
         List<Long> ids = totalBanMap.keySet().stream().toList();
 
+        Map<Long, LocalDate> latestBanDateMap = new HashMap<>();
+        ids.forEach(id -> {
+            LocalDate latestDate = null;
+            List<SourceBan> totalBans = totalBanMap.get(id);
+            for (SourceBan ban : totalBans) {
+                LocalDate localDate = SteamIDUtils.getLocalDateFromTimestamp(ban.getBanTimestamp());
+                if (latestDate == null || localDate.isAfter(latestDate)) {
+                    latestDate = localDate;
+                }
+            }
+            latestBanDateMap.put(id, latestDate);
+        });
+
         for (int i = 0; i < ids.size(); i++) {
             Long id = ids.get(i);
             String[] values = { userMap.get(id),
                     id.toString(),
                     String.valueOf( activeBanMap.get( id ).size() ),
                     String.valueOf( totalBanMap.get( id ).size() ),
+                    latestBanDateMap.get(id).toString(),
                     STEAM_HISTORY_URI + id };
             System.arraycopy( values, 0, tableContents[i], 0, HEADER_ROW.length );
         }
@@ -89,7 +105,7 @@ public class CommunityBanPanel extends BaseResultsPanel {
                 Point point = event.getPoint();
                 int row = jTable.rowAtPoint(point);
                 if (event.getClickCount() == 2 && jTable.getSelectedRow() != -1) {
-                    String url = (String) table.getValueAt(row, 4);
+                    String url = (String) table.getValueAt(row, 5);
                     try {
                         Desktop.getDesktop().browse(new URI( url ) );
                     } catch (Exception e) {

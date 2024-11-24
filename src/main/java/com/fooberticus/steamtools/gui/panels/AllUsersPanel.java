@@ -43,10 +43,7 @@ public class AllUsersPanel extends BaseResultsPanel {
         for (int i = 0; i < ids.size(); i++) {
             Long id = ids.get(i);
             Long timeCreated = playerSummaryMap.get(id).getTimecreated();
-            LocalDate createdDate = null;
-            if (timeCreated != null) {
-                createdDate = Instant.ofEpochMilli(timeCreated * 1000).atZone(ZoneId.systemDefault()).toLocalDate();
-            }
+            LocalDate createdDate = SteamIDUtils.getLocalDateFromTimestamp(timeCreated);
             String[] values = { userMap.get(id),
                     SteamIDUtils.getSteamID32FromSteamID64(id),
                     id.toString(),

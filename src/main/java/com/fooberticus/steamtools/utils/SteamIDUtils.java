@@ -1,5 +1,8 @@
 package com.fooberticus.steamtools.utils;
 
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -45,5 +48,14 @@ public final class SteamIDUtils {
             }
         }
         return userMap;
+    }
+
+    public static LocalDate getLocalDateFromTimestamp(final Long timestamp) {
+        if (timestamp == null) {
+            return null;
+        }
+        return Instant.ofEpochMilli( timestamp * 1000 )
+                .atZone( ZoneId.systemDefault() )
+                .toLocalDate();
     }
 }
