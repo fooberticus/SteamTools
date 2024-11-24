@@ -2,7 +2,7 @@ package com.fooberticus.steamtools.gui.panels;
 
 import com.fooberticus.steamtools.models.SourceBan;
 import com.fooberticus.steamtools.models.SourceBanResponse;
-import com.fooberticus.steamtools.utils.SteamIDUtils;
+import com.fooberticus.steamtools.utils.SteamUtils;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.swing.*;
@@ -25,7 +25,7 @@ public class CommunityBanPanel extends BaseResultsPanel {
 
     private static final String STEAM_HISTORY_URI = "https://steamhistory.net/id/";
 
-    private static final String[] HEADER_ROW = {"User Name", "Steam64 ID", "Active Bans", "Total Bans", "Last Ban Date", "Steam History"};
+    private static final String[] HEADER_ROW = {"User Name", "Steam64 ID", "Active Bans", "Total Bans", "Cheating Found", "Last Ban Date", "Last Ban Reason", "Steam History"};
 
     private final SourceBanResponse response;
     private final Map<Long, String> userMap;
@@ -39,48 +39,57 @@ public class CommunityBanPanel extends BaseResultsPanel {
 
     private void formatResults() {
         List<SourceBan> banList = response.getResponse();
-        Map<Long, List<SourceBan>> activeBanMap = new HashMap<>();
-        Map<Long, List<SourceBan>> totalBanMap = new HashMap<>();
+
+        Map<Long, CommunityUser> communityUserMap = new HashMap<>();
+
+        Map<Long, SourceBan> latestBanMap = new HashMap<>();
 
         banList.forEach(ban -> {
             Long id = Long.parseLong( ban.getSteamID() );
-            activeBanMap.computeIfAbsent(id, k -> new ArrayList<>());
-            totalBanMap.computeIfAbsent(id, k -> new ArrayList<>());
 
-            List<SourceBan> activeList = activeBanMap.get(id);
+            communityUserMap.computeIfAbsent(id,
+                    k -> new CommunityUser(
+                            userMap.get(id),
+                            id,
+                            0,
+                            0,
+                            false,
+                            null,
+                            null,
+                            STEAM_HISTORY_URI + id
+                    )
+            );
+
             switch (ban.getCurrentState()) {
                 case PERMANENT:
-                case TEMP_BAN: activeList.add(ban); break;
+                case TEMP_BAN: communityUserMap.get(id).activeBans++; break;
             }
 
-            List<SourceBan> totalList = totalBanMap.get(id);
-            totalList.add(ban);
-        });
+            communityUserMap.get(id).totalBans++;
 
-        String[][] tableContents = new String[totalBanMap.size()][HEADER_ROW.length];
-
-        List<Long> ids = totalBanMap.keySet().stream().toList();
-
-        Map<Long, LocalDate> latestBanDateMap = new HashMap<>();
-        ids.forEach(id -> {
-            LocalDate latestDate = null;
-            List<SourceBan> totalBans = totalBanMap.get(id);
-            for (SourceBan ban : totalBans) {
-                LocalDate localDate = SteamIDUtils.getLocalDateFromTimestamp(ban.getBanTimestamp());
-                if (latestDate == null || localDate.isAfter(latestDate)) {
-                    latestDate = localDate;
-                }
+            if ( SteamUtils.isBanReasonCheating(ban.getBanReason() ) ) {
+                communityUserMap.get(id).cheatingFound = true;
             }
-            latestBanDateMap.put(id, latestDate);
+
+            LocalDate banDate = SteamUtils.getLocalDateFromTimestamp(ban.getBanTimestamp());
+            if (!latestBanMap.containsKey(id) || SteamUtils.getLocalDateFromTimestamp( latestBanMap.get(id).getBanTimestamp() ).isBefore(banDate) ) {
+                latestBanMap.put(id, ban);
+            }
         });
+
+        String[][] tableContents = new String[communityUserMap.size()][HEADER_ROW.length];
+
+        List<Long> ids = communityUserMap.keySet().stream().toList();
 
         for (int i = 0; i < ids.size(); i++) {
             Long id = ids.get(i);
             String[] values = { userMap.get(id),
                     id.toString(),
-                    String.valueOf( activeBanMap.get( id ).size() ),
-                    String.valueOf( totalBanMap.get( id ).size() ),
-                    latestBanDateMap.get(id).toString(),
+                    String.valueOf( communityUserMap.get(id).activeBans ),
+                    String.valueOf( communityUserMap.get(id).totalBans ),
+                    communityUserMap.get(id).cheatingFound ? "Yes" : "No",
+                    SteamUtils.getLocalDateFromTimestamp( latestBanMap.get(id).getBanTimestamp() ).toString(),
+                    latestBanMap.get(id).getBanReason(),
                     STEAM_HISTORY_URI + id };
             System.arraycopy( values, 0, tableContents[i], 0, HEADER_ROW.length );
         }
@@ -105,7 +114,7 @@ public class CommunityBanPanel extends BaseResultsPanel {
                 Point point = event.getPoint();
                 int row = jTable.rowAtPoint(point);
                 if (event.getClickCount() == 2 && jTable.getSelectedRow() != -1) {
-                    String url = (String) table.getValueAt(row, 5);
+                    String url = (String) table.getValueAt(row, 7);
                     try {
                         Desktop.getDesktop().browse(new URI( url ) );
                     } catch (Exception e) {
@@ -116,5 +125,27 @@ public class CommunityBanPanel extends BaseResultsPanel {
         });
 
         scrollPane.setViewportView(table);
+    }
+
+    private static class CommunityUser {
+        String userName;
+        Long steam64Id;
+        Integer activeBans;
+        Integer totalBans;
+        Boolean cheatingFound;
+        LocalDate lastBanDate;
+        String lastBanReason;
+        String steamHistoryUrl;
+
+        CommunityUser(String userName, Long steam64Id, Integer activeBans, Integer totalBans, Boolean cheatingFound, LocalDate lastBanDate, String lastBanReason, String steamHistoryUrl) {
+            this.userName = userName;
+            this.steam64Id = steam64Id;
+            this.activeBans = activeBans;
+            this.totalBans = totalBans;
+            this.cheatingFound = cheatingFound;
+            this.lastBanDate = lastBanDate;
+            this.lastBanReason = lastBanReason;
+            this.steamHistoryUrl = steamHistoryUrl;
+        }
     }
 }

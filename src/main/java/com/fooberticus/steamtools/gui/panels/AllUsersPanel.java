@@ -1,7 +1,7 @@
 package com.fooberticus.steamtools.gui.panels;
 
 import com.fooberticus.steamtools.models.SteamPlayerSummary;
-import com.fooberticus.steamtools.utils.SteamIDUtils;
+import com.fooberticus.steamtools.utils.SteamUtils;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.swing.*;
@@ -11,9 +11,7 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.net.URI;
-import java.time.Instant;
 import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -43,9 +41,9 @@ public class AllUsersPanel extends BaseResultsPanel {
         for (int i = 0; i < ids.size(); i++) {
             Long id = ids.get(i);
             Long timeCreated = playerSummaryMap.get(id).getTimecreated();
-            LocalDate createdDate = SteamIDUtils.getLocalDateFromTimestamp(timeCreated);
+            LocalDate createdDate = SteamUtils.getLocalDateFromTimestamp(timeCreated);
             String[] values = { userMap.get(id),
-                    SteamIDUtils.getSteamID32FromSteamID64(id),
+                    SteamUtils.getSteamID32FromSteamID64(id),
                     id.toString(),
                     playerSummaryMap.get(id).getCommunityvisibilitystate() == 3 ? "public" : "PRIVATE",
                     createdDate == null ? "unknown" : createdDate.toString(),

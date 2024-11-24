@@ -1,5 +1,7 @@
 package com.fooberticus.steamtools.utils;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -8,13 +10,13 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public final class SteamIDUtils {
+public final class SteamUtils {
 
     public static final long STEAM_64_BASE = 76561197960265728L;
     private static final Pattern STEAM_ID_32_PATTERN = Pattern.compile("\\[U:1:([0-9]+)]");
     private static final Pattern USER_NAME_PATTERN = Pattern.compile("^#[ ]+[0-9]+ \"(.+)\" +");
 
-    private SteamIDUtils() {}
+    private SteamUtils() {}
 
     public static Long getSteamID64FromSteamID32(final String steamID32) {
         Matcher m = STEAM_ID_32_PATTERN.matcher(steamID32);
@@ -57,5 +59,9 @@ public final class SteamIDUtils {
         return Instant.ofEpochMilli( timestamp * 1000 )
                 .atZone( ZoneId.systemDefault() )
                 .toLocalDate();
+    }
+
+    public static boolean isBanReasonCheating(final String reason) {
+        return StringUtils.containsAnyIgnoreCase(reason, "cheat", "bot", "hack", "lmaobox");
     }
 }

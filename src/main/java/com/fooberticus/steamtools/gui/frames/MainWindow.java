@@ -7,7 +7,7 @@ import com.fooberticus.steamtools.models.SteamPlayerBansResponse;
 import com.fooberticus.steamtools.models.SteamPlayerSummaryResponse;
 import com.fooberticus.steamtools.utils.CustomRestClient;
 import com.fooberticus.steamtools.utils.GuiUtil;
-import com.fooberticus.steamtools.utils.SteamIDUtils;
+import com.fooberticus.steamtools.utils.SteamUtils;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.swing.*;
@@ -65,7 +65,7 @@ public class MainWindow extends JFrame {
             return;
         }
 
-        Map<Long, String> userMap = SteamIDUtils.getUserMapFromStatusText( statusTextArea.getText() );
+        Map<Long, String> userMap = SteamUtils.getUserMapFromStatusText( statusTextArea.getText() );
         if (userMap.isEmpty()) {
             JOptionPane.showMessageDialog(null, "No user IDs found in text.");
             return;

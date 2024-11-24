@@ -8,7 +8,7 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class SteamIDUtilsTest {
+public class SteamUtilsTest {
 
     public final static String STATUS_CHONK = "ng soldier for 1 year :  yeah thats why\n" +
             "gondon freeman killed malmes3 with sword.\n" +
@@ -49,7 +49,7 @@ public class SteamIDUtilsTest {
     @Test
     public void getUserNameFromLine_returns_correct_username() {
         String line = "#    793 \"lolglorns\"         [U:1:844054915]     34:07       59    0 active";
-        String result = SteamIDUtils.getUserNameFromLine(line);
+        String result = SteamUtils.getUserNameFromLine(line);
         assertEquals("lolglorns", result);
     }
 
@@ -57,7 +57,7 @@ public class SteamIDUtilsTest {
     public void getUserNameFromLine_returns_correct_weird_usernames() {
         List<String> userNames = new ArrayList<>();
         for (String line : STATUS_CHONK.split("\n")) {
-            String name = SteamIDUtils.getUserNameFromLine(line);
+            String name = SteamUtils.getUserNameFromLine(line);
             if (name != null) {
                 System.out.println(name);
                 userNames.add(name);
@@ -69,11 +69,11 @@ public class SteamIDUtilsTest {
 
     @Test
     public void getUserMapFromStatusText_returns_correct_map() {
-        Map<Long, String> userMap = SteamIDUtils.getUserMapFromStatusText(STATUS_CHONK);
+        Map<Long, String> userMap = SteamUtils.getUserMapFromStatusText(STATUS_CHONK);
 
         assertEquals(20, userMap.size());
-        assertTrue(userMap.containsKey(SteamIDUtils.STEAM_64_BASE + 1525843434));
-        assertEquals("ProGamer1337", userMap.get(SteamIDUtils.STEAM_64_BASE + 1525843434));
+        assertTrue(userMap.containsKey(SteamUtils.STEAM_64_BASE + 1525843434));
+        assertEquals("ProGamer1337", userMap.get(SteamUtils.STEAM_64_BASE + 1525843434));
 
         userMap.forEach((id, name) ->{
             System.out.println(id + "::" + name);

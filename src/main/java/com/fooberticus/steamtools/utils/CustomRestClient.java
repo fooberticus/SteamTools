@@ -5,7 +5,7 @@ import com.fooberticus.steamtools.models.SteamPlayerBansResponse;
 import com.fooberticus.steamtools.models.SteamPlayerSummaryResponse;
 import com.google.gson.Gson;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.juneau.common.internal.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.juneau.rest.client.RestClient;
 
 import java.util.Set;
