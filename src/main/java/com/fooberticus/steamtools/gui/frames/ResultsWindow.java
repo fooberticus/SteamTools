@@ -17,45 +17,22 @@ import java.util.Map;
  */
 public class ResultsWindow extends JFrame {
 
-    public ResultsWindow(SourceBanResponse steamHistoryResponse, SteamPlayerBansResponse steamPlayerBansResponse, SteamPlayerSummaryResponse steamPlayerSummaryResponse, Map<Long, String> userMap) {
+    public ResultsWindow(Map<Long, List<SourceBan>> sourceBanMap, Map<Long, SteamPlayerBan> steamPlayerBanMap, Map<Long, SteamPlayerSummary> steamPlayerSummaryMap) {
         initComponents();
 
-        Map<Long, SteamPlayerSummary> playerSummaryMap = new HashMap<>();
-        if (steamPlayerSummaryResponse != null
-                && steamPlayerSummaryResponse.getResponse() != null
-                && steamPlayerSummaryResponse.getResponse().players() != null
-                && !steamPlayerSummaryResponse.getResponse().players().isEmpty()) {
-            List<SteamPlayerSummary> playerSummaries = steamPlayerSummaryResponse.getResponse().players();
-            for (SteamPlayerSummary playerSummary : playerSummaries) {
-                playerSummaryMap.put( Long.valueOf(playerSummary.getSteamid()), playerSummary );
-            }
+        if (!steamPlayerBanMap.isEmpty()) {
+            resultsTabbedPane.add( "Steam Bans", new VACBanPanel( steamPlayerSummaryMap, steamPlayerBanMap ) );
         }
 
-        Map<Long, SteamPlayerBan> vacBannedPlayersMap  = new HashMap<>();
-        if (steamPlayerBansResponse != null
-                && steamPlayerBansResponse.getPlayers() != null
-                && !steamPlayerBansResponse.getPlayers().isEmpty()) {
-            List<SteamPlayerBan> playerBansList = steamPlayerBansResponse.getPlayers();
-            for (SteamPlayerBan playerBan : playerBansList) {
-                if (playerBan.getVACBanned() || playerBan.getNumberOfGameBans() > 0) {
-                    vacBannedPlayersMap.put( Long.valueOf( playerBan.getSteamId() ), playerBan );
-                }
-            }
+        if (!sourceBanMap.isEmpty()) {
+            resultsTabbedPane.add("Community Bans", new CommunityBanPanel(steamPlayerSummaryMap, sourceBanMap));
         }
 
-        if (!vacBannedPlayersMap.isEmpty()) {
-            resultsTabbedPane.add( "Steam Bans", new VACBanPanel( vacBannedPlayersMap, userMap ) );
-        }
-
-        if (steamHistoryResponse != null && steamHistoryResponse.getResponse() != null && !steamHistoryResponse.getResponse().isEmpty()) {
-            resultsTabbedPane.add("Community Bans", new CommunityBanPanel(steamHistoryResponse, userMap));
-        }
-
-        resultsTabbedPane.add("All Players", new AllUsersPanel(userMap, playerSummaryMap));
+        resultsTabbedPane.add("All Players", new AllUsersPanel(steamPlayerSummaryMap));
     }
 
-    public static void startResultsWindow(SourceBanResponse steamHistoryResponse, SteamPlayerBansResponse steamPlayerBansResponse, SteamPlayerSummaryResponse steamPlayerSummaryResponse, Map<Long, String> userMap) {
-        GuiUtil.initWindow( new ResultsWindow(steamHistoryResponse, steamPlayerBansResponse, steamPlayerSummaryResponse, userMap), "Results" );
+    public static void startResultsWindow(Map<Long, List<SourceBan>> sourceBanMap, Map<Long, SteamPlayerBan> steamPlayerBanMap, Map<Long, SteamPlayerSummary> steamPlayerSummaryMap) {
+        GuiUtil.initWindow( new ResultsWindow(sourceBanMap, steamPlayerBanMap, steamPlayerSummaryMap), "Results" );
     }
 
     private void initComponents() {

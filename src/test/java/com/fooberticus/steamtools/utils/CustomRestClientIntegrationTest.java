@@ -6,8 +6,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -24,13 +22,11 @@ public class CustomRestClientIntegrationTest {
 
     @Test
     public void testMakingRequestsToSteamHistory() throws Exception {
-        Map<Long, String> userMap = SteamUtils.getUserMapFromStatusText( SteamUtilsTest.STATUS_CHONK );
+        List<Long> userIds = SteamUtils.getUserIdsFromText( SteamUtilsTest.STATUS_CHONK );
 
-        assertEquals(20, userMap.size());
+        assertEquals(20, userIds.size());
 
-        Set<Long> ids = userMap.keySet();
-
-        SourceBanResponse response = client.getSourceBans(ids);
+        SourceBanResponse response = client.getSourceBans(userIds);
 
         assertNotNull(response);
 

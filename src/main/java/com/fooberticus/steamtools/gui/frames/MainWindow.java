@@ -2,9 +2,7 @@ package com.fooberticus.steamtools.gui.frames;
 
 import java.awt.*;
 
-import com.fooberticus.steamtools.models.SourceBanResponse;
-import com.fooberticus.steamtools.models.SteamPlayerBansResponse;
-import com.fooberticus.steamtools.models.SteamPlayerSummaryResponse;
+import com.fooberticus.steamtools.models.*;
 import com.fooberticus.steamtools.utils.CustomRestClient;
 import com.fooberticus.steamtools.utils.GuiUtil;
 import com.fooberticus.steamtools.utils.SteamUtils;
@@ -14,6 +12,9 @@ import javax.swing.*;
 import javax.swing.GroupLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -65,19 +66,51 @@ public class MainWindow extends JFrame {
             return;
         }
 
-        Map<Long, String> userMap = SteamUtils.getUserMapFromStatusText( statusTextArea.getText() );
-        if (userMap.isEmpty()) {
+        List<Long> userIds = SteamUtils.getUserIdsFromText( statusTextArea.getText() );
+        if (userIds.isEmpty()) {
             JOptionPane.showMessageDialog(null, "No user IDs found in text.");
             return;
         }
 
         disableButtons();
 
-        SourceBanResponse steamHistoryResponse = client.getSourceBans( userMap.keySet() );
-        SteamPlayerBansResponse steamPlayerBansResponse = client.getSteamPlayerBans( userMap.keySet() );
-        SteamPlayerSummaryResponse steamPlayerSummaryResponse = client.getSteamPlayerSummaries( userMap.keySet() );
+        SourceBanResponse steamHistoryResponse = client.getSourceBans( userIds );
+        SteamPlayerBansResponse steamPlayerBansResponse = client.getSteamPlayerBans( userIds );
+        SteamPlayerSummaryResponse steamPlayerSummaryResponse = client.getSteamPlayerSummaries( userIds );
 
-        ResultsWindow.startResultsWindow(steamHistoryResponse, steamPlayerBansResponse, steamPlayerSummaryResponse, userMap);
+        Map<Long, List<SourceBan>> sourceBanMap = new HashMap<>();
+        Map<Long, SteamPlayerBan> steamPlayerBanMap = new HashMap<>();
+        Map<Long, SteamPlayerSummary> steamPlayerSummaryMap = new HashMap<>();
+
+        if (steamHistoryResponse != null
+                && steamHistoryResponse.getResponse() != null
+                && !steamHistoryResponse.getResponse().isEmpty()) {
+            steamHistoryResponse.getResponse().forEach(response -> {
+                Long id = Long.valueOf(response.getSteamID());
+                sourceBanMap.computeIfAbsent(id, k -> new ArrayList<>());
+                sourceBanMap.get(id).add(response);
+            });
+        }
+
+        if (steamPlayerBansResponse != null
+                && steamPlayerBansResponse.getPlayers() != null
+                && !steamPlayerBansResponse.getPlayers().isEmpty()) {
+            steamPlayerBansResponse.getPlayers().forEach(response -> {
+                Long id = Long.valueOf( response.getSteamId() );
+                if (response.getVACBanned() || response.getNumberOfGameBans() > 0) {
+                    steamPlayerBanMap.put(id, response);
+                }
+            });
+        }
+
+        if (steamPlayerSummaryResponse != null
+                && steamPlayerSummaryResponse.getResponse() != null
+                && !steamPlayerSummaryResponse.getResponse().players().isEmpty()) {
+            steamPlayerSummaryResponse.getResponse().players().forEach(response ->
+                    steamPlayerSummaryMap.put( Long.valueOf( response.getSteamid() ), response ) );
+        }
+
+        ResultsWindow.startResultsWindow(sourceBanMap, steamPlayerBanMap, steamPlayerSummaryMap);
 
         enableButtons();
     }

@@ -1,6 +1,7 @@
 package com.fooberticus.steamtools.gui.panels;
 
 import com.fooberticus.steamtools.models.SteamPlayerBan;
+import com.fooberticus.steamtools.models.SteamPlayerSummary;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.swing.*;
@@ -19,31 +20,31 @@ import static com.fooberticus.steamtools.gui.panels.AllUsersPanel.STEAM_COMMUNIT
 @Slf4j
 public class VACBanPanel extends BaseResultsPanel {
 
-    private Map<Long, SteamPlayerBan> playerBanMap;
-    private Map<Long, String> userMap;
+    private final Map<Long, SteamPlayerSummary> steamPlayerSummaryMap;
+    private final Map<Long, SteamPlayerBan> steamPlayerBanMap;
 
     private static final String[] HEADER_ROW = {"User Name", "Steam64 ID", "VAC Banned", "VAC Bans", "Game Bans", "Days Since Last", "Profile URL"};
 
-    public VACBanPanel(Map<Long, SteamPlayerBan> playerBanMap, Map<Long, String> userMap) {
+    public VACBanPanel(Map<Long, SteamPlayerSummary> steamPlayerSummaryMap, Map<Long, SteamPlayerBan> steamPlayerBanMap) {
         super();
-        this.playerBanMap = playerBanMap;
-        this.userMap = userMap;
+        this.steamPlayerSummaryMap = steamPlayerSummaryMap;
+        this.steamPlayerBanMap = steamPlayerBanMap;
         formatResults();
     }
 
     private void formatResults() {
-        String[][] tableContents = new String[playerBanMap.size()][HEADER_ROW.length];
+        String[][] tableContents = new String[steamPlayerBanMap.size()][HEADER_ROW.length];
 
-        List<Long> ids = playerBanMap.keySet().stream().toList();
+        List<Long> ids = steamPlayerBanMap.keySet().stream().toList();
 
         for (int i = 0; i < ids.size(); i++) {
             Long id = ids.get(i);
-            String[] values = { userMap.get(id),
+            String[] values = { steamPlayerSummaryMap.get(id).getPersonaname(),
                     id.toString(),
-                    playerBanMap.get(id).getVACBanned().toString(),
-                    playerBanMap.get(id).getNumberOfVACBans().toString(),
-                    playerBanMap.get(id).getNumberOfGameBans().toString(),
-                    playerBanMap.get(id).getDaysSinceLastBan().toString(),
+                    steamPlayerBanMap.get(id).getVACBanned() ? "Yes" : "No",
+                    steamPlayerBanMap.get(id).getNumberOfVACBans().toString(),
+                    steamPlayerBanMap.get(id).getNumberOfGameBans().toString(),
+                    steamPlayerBanMap.get(id).getDaysSinceLastBan().toString(),
                     STEAM_COMMUNITY_URI + id };
             System.arraycopy( values, 0, tableContents[i], 0, HEADER_ROW.length );
         }

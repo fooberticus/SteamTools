@@ -2,11 +2,10 @@ package com.fooberticus.steamtools.utils;
 
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class SteamUtilsTest {
 
@@ -47,37 +46,11 @@ public class SteamUtilsTest {
             "lolglorns :  GET A HEAD START RIGHT MEOW\n";
 
     @Test
-    public void getUserNameFromLine_returns_correct_username() {
-        String line = "#    793 \"lolglorns\"         [U:1:844054915]     34:07       59    0 active";
-        String result = SteamUtils.getUserNameFromLine(line);
-        assertEquals("lolglorns", result);
-    }
+    public void getUserIdsFromText_returns_correct_list() {
+        List<Long> userIds = SteamUtils.getUserIdsFromText(STATUS_CHONK);
 
-    @Test
-    public void getUserNameFromLine_returns_correct_weird_usernames() {
-        List<String> userNames = new ArrayList<>();
-        for (String line : STATUS_CHONK.split("\n")) {
-            String name = SteamUtils.getUserNameFromLine(line);
-            if (name != null) {
-                System.out.println(name);
-                userNames.add(name);
-            }
-        }
-
-        assertEquals(20, userNames.size());
-    }
-
-    @Test
-    public void getUserMapFromStatusText_returns_correct_map() {
-        Map<Long, String> userMap = SteamUtils.getUserMapFromStatusText(STATUS_CHONK);
-
-        assertEquals(20, userMap.size());
-        assertTrue(userMap.containsKey(SteamUtils.STEAM_64_BASE + 1525843434));
-        assertEquals("ProGamer1337", userMap.get(SteamUtils.STEAM_64_BASE + 1525843434));
-
-        userMap.forEach((id, name) ->{
-            System.out.println(id + "::" + name);
-        });
+        assertEquals(20, userIds.size());
+        assertTrue(userIds.contains(SteamUtils.STEAM_64_BASE + 1525843434));
     }
 
 }

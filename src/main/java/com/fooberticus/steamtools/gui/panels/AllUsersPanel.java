@@ -23,26 +23,24 @@ public class AllUsersPanel extends BaseResultsPanel {
 
     private static final String[] HEADER_ROW = {"User Name", "Steam32 ID", "Steam64 ID", "Profile Visibility", "Profile Created", "Profile URL"};
 
-    private final Map<Long, String> userMap;
     private final Map<Long, SteamPlayerSummary> playerSummaryMap;
 
-    public AllUsersPanel(Map<Long, String> userMap, Map<Long, SteamPlayerSummary> playerSummaryMap) {
+    public AllUsersPanel(Map<Long, SteamPlayerSummary> playerSummaryMap) {
         super();
-        this.userMap = userMap;
         this.playerSummaryMap = playerSummaryMap;
         formatResults();
     }
 
     private void formatResults() {
-        String[][] tableContents = new String[userMap.size()][HEADER_ROW.length];
+        String[][] tableContents = new String[playerSummaryMap.size()][HEADER_ROW.length];
 
-        List<Long> ids = userMap.keySet().stream().toList();
+        List<Long> ids = playerSummaryMap.keySet().stream().toList();
 
         for (int i = 0; i < ids.size(); i++) {
             Long id = ids.get(i);
             Long timeCreated = playerSummaryMap.get(id).getTimecreated();
             LocalDate createdDate = SteamUtils.getLocalDateFromTimestamp(timeCreated);
-            String[] values = { userMap.get(id),
+            String[] values = { playerSummaryMap.get(id).getPersonaname(),
                     SteamUtils.getSteamID32FromSteamID64(id),
                     id.toString(),
                     playerSummaryMap.get(id).getCommunityvisibilitystate() == 3 ? "public" : "PRIVATE",

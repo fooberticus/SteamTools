@@ -1,7 +1,7 @@
 package com.fooberticus.steamtools.gui.panels;
 
 import com.fooberticus.steamtools.models.SourceBan;
-import com.fooberticus.steamtools.models.SourceBanResponse;
+import com.fooberticus.steamtools.models.SteamPlayerSummary;
 import com.fooberticus.steamtools.utils.SteamUtils;
 import lombok.extern.slf4j.Slf4j;
 
@@ -27,54 +27,52 @@ public class CommunityBanPanel extends BaseResultsPanel {
 
     private static final String[] HEADER_ROW = {"User Name", "Steam64 ID", "Active Bans", "Total Bans", "Cheating Found", "Last Ban Date", "Last Ban Reason", "Steam History"};
 
-    private final SourceBanResponse response;
-    private final Map<Long, String> userMap;
+    private final Map<Long, SteamPlayerSummary> steamPlayerSummaryMap;
+    private final Map<Long, List<SourceBan>> sourceBanMap;
 
-    public CommunityBanPanel(final SourceBanResponse response, final Map<Long, String> userMap) {
+    public CommunityBanPanel(final Map<Long, SteamPlayerSummary> steamPlayerSummaryMap, final Map<Long, List<SourceBan>> sourceBanMap) {
         super();
-        this.response = response;
-        this.userMap = userMap;
+        this.steamPlayerSummaryMap = steamPlayerSummaryMap;
+        this.sourceBanMap = sourceBanMap;
         formatResults();
     }
 
     private void formatResults() {
-        List<SourceBan> banList = response.getResponse();
-
         Map<Long, CommunityUser> communityUserMap = new HashMap<>();
 
         Map<Long, SourceBan> latestBanMap = new HashMap<>();
 
-        banList.forEach(ban -> {
-            Long id = Long.parseLong( ban.getSteamID() );
+        sourceBanMap.keySet().forEach(id -> {
 
-            communityUserMap.computeIfAbsent(id,
-                    k -> new CommunityUser(
-                            userMap.get(id),
+            communityUserMap.computeIfAbsent(id, k -> new CommunityUser(
+                            steamPlayerSummaryMap.get(id).getPersonaname(),
                             id,
                             0,
-                            0,
+                            sourceBanMap.get(id).size(),
                             false,
                             null,
                             null,
-                            STEAM_HISTORY_URI + id
-                    )
-            );
+                            STEAM_HISTORY_URI + id ) );
 
-            switch (ban.getCurrentState()) {
-                case PERMANENT:
-                case TEMP_BAN: communityUserMap.get(id).activeBans++; break;
-            }
 
-            communityUserMap.get(id).totalBans++;
+            sourceBanMap.get(id).forEach(ban -> {
 
-            if ( SteamUtils.isBanReasonCheating(ban.getBanReason() ) ) {
-                communityUserMap.get(id).cheatingFound = true;
-            }
+                switch ( ban.getCurrentState() ) {
+                    case PERMANENT:
+                    case TEMP_BAN: communityUserMap.get(id).activeBans++; break;
+                }
 
-            LocalDate banDate = SteamUtils.getLocalDateFromTimestamp(ban.getBanTimestamp());
-            if (!latestBanMap.containsKey(id) || SteamUtils.getLocalDateFromTimestamp( latestBanMap.get(id).getBanTimestamp() ).isBefore(banDate) ) {
-                latestBanMap.put(id, ban);
-            }
+                if ( SteamUtils.isBanReasonCheating( ban.getBanReason() ) ) {
+                    communityUserMap.get(id).cheatingFound = true;
+                }
+
+                LocalDate banDate = SteamUtils.getLocalDateFromTimestamp(ban.getBanTimestamp());
+                if (!latestBanMap.containsKey(id) || SteamUtils.getLocalDateFromTimestamp( latestBanMap.get(id).getBanTimestamp() ).isBefore(banDate) ) {
+                    latestBanMap.put(id, ban);
+                }
+
+            });
+
         });
 
         String[][] tableContents = new String[communityUserMap.size()][HEADER_ROW.length];
@@ -83,7 +81,7 @@ public class CommunityBanPanel extends BaseResultsPanel {
 
         for (int i = 0; i < ids.size(); i++) {
             Long id = ids.get(i);
-            String[] values = { userMap.get(id),
+            String[] values = { steamPlayerSummaryMap.get(id).getPersonaname(),
                     id.toString(),
                     String.valueOf( communityUserMap.get(id).activeBans ),
                     String.valueOf( communityUserMap.get(id).totalBans ),
