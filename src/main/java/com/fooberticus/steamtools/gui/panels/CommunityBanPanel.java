@@ -1,7 +1,7 @@
 package com.fooberticus.steamtools.gui.panels;
 
-import com.fooberticus.steamtools.models.SourceBan;
-import com.fooberticus.steamtools.models.SteamPlayerSummary;
+import com.fooberticus.steamtools.models.steamhistory.SourceBan;
+import com.fooberticus.steamtools.models.steam.SteamPlayerSummary;
 import com.fooberticus.steamtools.utils.SteamUtils;
 import lombok.extern.slf4j.Slf4j;
 
@@ -85,7 +85,7 @@ public class CommunityBanPanel extends BaseResultsPanel {
                     id.toString(),
                     String.valueOf( communityUserMap.get(id).activeBans ),
                     String.valueOf( communityUserMap.get(id).totalBans ),
-                    communityUserMap.get(id).cheatingFound ? "Yes" : "No",
+                    communityUserMap.get(id).cheatingFound ? "Yes" : "--",
                     SteamUtils.getLocalDateFromTimestamp( latestBanMap.get(id).getBanTimestamp() ).toString(),
                     latestBanMap.get(id).getBanReason(),
                     STEAM_HISTORY_URI + id };

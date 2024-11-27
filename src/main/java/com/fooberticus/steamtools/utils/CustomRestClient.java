@@ -1,8 +1,8 @@
 package com.fooberticus.steamtools.utils;
 
-import com.fooberticus.steamtools.models.SourceBanResponse;
-import com.fooberticus.steamtools.models.SteamPlayerBansResponse;
-import com.fooberticus.steamtools.models.SteamPlayerSummaryResponse;
+import com.fooberticus.steamtools.models.steamhistory.SourceBanResponse;
+import com.fooberticus.steamtools.models.steam.SteamPlayerBansResponse;
+import com.fooberticus.steamtools.models.steam.SteamPlayerSummaryResponse;
 import com.google.gson.Gson;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;

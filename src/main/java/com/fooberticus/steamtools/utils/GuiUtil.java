@@ -26,7 +26,7 @@ import java.util.prefs.Preferences;
 public final class GuiUtil {
 
     public static final String APPLICATION_NAME = "Steam Tools";
-    public static final String DEFAULT_THEME = "Spacegray";
+    public static final String DEFAULT_THEME = "Material Dark";
     private static final String NAMESPACE = "fooberticus.SteamTools";
     private static final int DEFAULT_FONT_SIZE = 15;
 

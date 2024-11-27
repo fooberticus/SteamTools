@@ -1,4 +1,4 @@
-package com.fooberticus.steamtools.models;
+package com.fooberticus.steamtools.models.steam;
 
 import lombok.Data;
 

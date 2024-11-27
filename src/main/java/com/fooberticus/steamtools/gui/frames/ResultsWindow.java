@@ -3,12 +3,13 @@ package com.fooberticus.steamtools.gui.frames;
 import com.fooberticus.steamtools.gui.panels.AllUsersPanel;
 import com.fooberticus.steamtools.gui.panels.CommunityBanPanel;
 import com.fooberticus.steamtools.gui.panels.VACBanPanel;
-import com.fooberticus.steamtools.models.*;
+import com.fooberticus.steamtools.models.steam.SteamPlayerBan;
+import com.fooberticus.steamtools.models.steam.SteamPlayerSummary;
+import com.fooberticus.steamtools.models.steamhistory.SourceBan;
 import com.fooberticus.steamtools.utils.GuiUtil;
 
 import javax.swing.*;
 import javax.swing.GroupLayout;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 

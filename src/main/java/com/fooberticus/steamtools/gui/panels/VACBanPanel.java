@@ -1,7 +1,7 @@
 package com.fooberticus.steamtools.gui.panels;
 
-import com.fooberticus.steamtools.models.SteamPlayerBan;
-import com.fooberticus.steamtools.models.SteamPlayerSummary;
+import com.fooberticus.steamtools.models.steam.SteamPlayerBan;
+import com.fooberticus.steamtools.models.steam.SteamPlayerSummary;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.swing.*;
@@ -41,7 +41,7 @@ public class VACBanPanel extends BaseResultsPanel {
             Long id = ids.get(i);
             String[] values = { steamPlayerSummaryMap.get(id).getPersonaname(),
                     id.toString(),
-                    steamPlayerBanMap.get(id).getVACBanned() ? "Yes" : "No",
+                    steamPlayerBanMap.get(id).getVACBanned() ? "Yes" : "--",
                     steamPlayerBanMap.get(id).getNumberOfVACBans().toString(),
                     steamPlayerBanMap.get(id).getNumberOfGameBans().toString(),
                     steamPlayerBanMap.get(id).getDaysSinceLastBan().toString(),

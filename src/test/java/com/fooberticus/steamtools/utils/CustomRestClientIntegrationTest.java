@@ -1,7 +1,7 @@
 package com.fooberticus.steamtools.utils;
 
-import com.fooberticus.steamtools.models.SourceBan;
-import com.fooberticus.steamtools.models.SourceBanResponse;
+import com.fooberticus.steamtools.models.steamhistory.SourceBan;
+import com.fooberticus.steamtools.models.steamhistory.SourceBanResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 

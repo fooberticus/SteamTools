@@ -1,6 +1,6 @@
 package com.fooberticus.steamtools.gui.panels;
 
-import com.fooberticus.steamtools.models.SteamPlayerSummary;
+import com.fooberticus.steamtools.models.steam.SteamPlayerSummary;
 import com.fooberticus.steamtools.utils.SteamUtils;
 import lombok.extern.slf4j.Slf4j;
 
@@ -44,7 +44,7 @@ public class AllUsersPanel extends BaseResultsPanel {
                     SteamUtils.getSteamID32FromSteamID64(id),
                     id.toString(),
                     playerSummaryMap.get(id).getCommunityvisibilitystate() == 3 ? "public" : "PRIVATE",
-                    createdDate == null ? "unknown" : createdDate.toString(),
+                    createdDate == null ? "--" : createdDate.toString(),
                     STEAM_COMMUNITY_URI + id };
             System.arraycopy( values, 0, tableContents[i], 0, HEADER_ROW.length );
         }

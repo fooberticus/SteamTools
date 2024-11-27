@@ -2,7 +2,12 @@ package com.fooberticus.steamtools.gui.frames;
 
 import java.awt.*;
 
-import com.fooberticus.steamtools.models.*;
+import com.fooberticus.steamtools.models.steam.SteamPlayerBan;
+import com.fooberticus.steamtools.models.steam.SteamPlayerBansResponse;
+import com.fooberticus.steamtools.models.steam.SteamPlayerSummary;
+import com.fooberticus.steamtools.models.steam.SteamPlayerSummaryResponse;
+import com.fooberticus.steamtools.models.steamhistory.SourceBan;
+import com.fooberticus.steamtools.models.steamhistory.SourceBanResponse;
 import com.fooberticus.steamtools.utils.CustomRestClient;
 import com.fooberticus.steamtools.utils.GuiUtil;
 import com.fooberticus.steamtools.utils.SteamUtils;
