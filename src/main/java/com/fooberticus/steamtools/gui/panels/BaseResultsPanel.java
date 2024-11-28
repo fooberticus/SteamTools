@@ -188,7 +188,7 @@ public class BaseResultsPanel extends JPanel {
             Point point = e.getPoint();
             int row = jTable.rowAtPoint(point);
             int col = jTable.columnAtPoint(point);
-            jTable.changeSelection(row, col, true, false);
+            jTable.changeSelection( row, col, !( jTable.isRowSelected( row ) ), false );
 
             // this relies on the 2nd column to always be the Steam64 ID
             Long id = Long.valueOf( (String) jTable.getValueAt(row, 1) );
