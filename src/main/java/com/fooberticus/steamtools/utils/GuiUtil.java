@@ -17,6 +17,7 @@ import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.net.URI;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -86,6 +87,14 @@ public final class GuiUtil {
             log.error("Tried to retrieve non-text data from clipboard as text.");
         }
         return "";
+    }
+
+    public static void openURLInBrowser(String url) {
+        try {
+            Desktop.getDesktop().browse(new URI( url ) );
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+        }
     }
 
     /** Call this when the app first starts, to set up FlatLaf for the entire application. */

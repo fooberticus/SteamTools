@@ -9,7 +9,6 @@ import com.fooberticus.steamtools.models.steamhistory.SourceBan;
 import com.fooberticus.steamtools.utils.GuiUtil;
 
 import javax.swing.*;
-import javax.swing.GroupLayout;
 import java.util.List;
 import java.util.Map;
 
@@ -22,14 +21,14 @@ public class ResultsWindow extends JFrame {
         initComponents();
 
         if (!steamPlayerBanMap.isEmpty()) {
-            resultsTabbedPane.add( "Steam Bans", new VACBanPanel( steamPlayerSummaryMap, steamPlayerBanMap ) );
+            resultsTabbedPane.add( "Steam Bans", new VACBanPanel( steamPlayerSummaryMap, steamPlayerBanMap, sourceBanMap ) );
         }
 
         if (!sourceBanMap.isEmpty()) {
-            resultsTabbedPane.add("Community Bans", new CommunityBanPanel(steamPlayerSummaryMap, sourceBanMap));
+            resultsTabbedPane.add("Community Bans", new CommunityBanPanel(steamPlayerSummaryMap, steamPlayerBanMap, sourceBanMap));
         }
 
-        resultsTabbedPane.add("All Players", new AllUsersPanel(steamPlayerSummaryMap));
+        resultsTabbedPane.add("All Players", new AllUsersPanel(steamPlayerSummaryMap, steamPlayerBanMap, sourceBanMap));
     }
 
     public static void startResultsWindow(Map<Long, List<SourceBan>> sourceBanMap, Map<Long, SteamPlayerBan> steamPlayerBanMap, Map<Long, SteamPlayerSummary> steamPlayerSummaryMap) {

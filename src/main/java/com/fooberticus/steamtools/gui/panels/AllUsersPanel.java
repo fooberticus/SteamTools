@@ -1,6 +1,9 @@
 package com.fooberticus.steamtools.gui.panels;
 
+import com.fooberticus.steamtools.models.steam.SteamPlayerBan;
 import com.fooberticus.steamtools.models.steam.SteamPlayerSummary;
+import com.fooberticus.steamtools.models.steamhistory.SourceBan;
+import com.fooberticus.steamtools.utils.GuiUtil;
 import com.fooberticus.steamtools.utils.SteamUtils;
 import lombok.extern.slf4j.Slf4j;
 
@@ -10,7 +13,6 @@ import javax.swing.table.TableRowSorter;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.net.URI;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,13 +23,17 @@ public class AllUsersPanel extends BaseResultsPanel {
 
     public static final String STEAM_COMMUNITY_URI = "https://steamcommunity.com/profiles/";
 
-    private static final String[] HEADER_ROW = {"User Name", "Steam32 ID", "Steam64 ID", "Profile Visibility", "Profile Created", "Profile URL"};
+    private static final String[] HEADER_ROW = {"User Name", "Steam64 ID", "Steam32 ID", "Profile Visibility", "Profile Created", "Profile URL"};
 
     private final Map<Long, SteamPlayerSummary> playerSummaryMap;
+    private final Map<Long, SteamPlayerBan> steamPlayerBanMap;
+    private final Map<Long, List<SourceBan>> sourceBanMap;
 
-    public AllUsersPanel(Map<Long, SteamPlayerSummary> playerSummaryMap) {
+    public AllUsersPanel (final Map<Long, SteamPlayerSummary> playerSummaryMap, final Map<Long, SteamPlayerBan> steamPlayerBanMap, final Map<Long, List<SourceBan>> sourceBanMap) {
         super();
         this.playerSummaryMap = playerSummaryMap;
+        this.steamPlayerBanMap = steamPlayerBanMap;
+        this.sourceBanMap = sourceBanMap;
         formatResults();
     }
 
@@ -41,8 +47,8 @@ public class AllUsersPanel extends BaseResultsPanel {
             Long timeCreated = playerSummaryMap.get(id).getTimecreated();
             LocalDate createdDate = SteamUtils.getLocalDateFromTimestamp(timeCreated);
             String[] values = { playerSummaryMap.get(id).getPersonaname(),
-                    SteamUtils.getSteamID32FromSteamID64(id),
                     id.toString(),
+                    SteamUtils.getSteamID32FromSteamID64(id),
                     playerSummaryMap.get(id).getCommunityvisibilitystate() == 3 ? "public" : "PRIVATE",
                     createdDate == null ? "--" : createdDate.toString(),
                     STEAM_COMMUNITY_URI + id };
@@ -53,6 +59,7 @@ public class AllUsersPanel extends BaseResultsPanel {
         table.setEnabled(true);
         table.setDefaultEditor(Object.class, null);
         table.setShowGrid(true);
+        table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
         TableRowSorter<TableModel> sorter = new TableRowSorter<>(table.getModel());
         table.setRowSorter(sorter);
@@ -68,14 +75,12 @@ public class AllUsersPanel extends BaseResultsPanel {
                 int row = jTable.rowAtPoint(point);
                 if (event.getClickCount() == 2 && jTable.getSelectedRow() != -1) {
                     String url = (String) table.getValueAt(row, 5);
-                    try {
-                        Desktop.getDesktop().browse(new URI( url ) );
-                    } catch (Exception e) {
-                        log.error(e.getMessage(), e);
-                    }
+                    GuiUtil.openURLInBrowser(url);
                 }
             }
         });
+
+        table.addMouseListener(new PopUpMenuClickListener(playerSummaryMap, steamPlayerBanMap, sourceBanMap));
 
         scrollPane.setViewportView(table);
     }

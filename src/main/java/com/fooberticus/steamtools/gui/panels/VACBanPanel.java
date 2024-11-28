@@ -2,6 +2,8 @@ package com.fooberticus.steamtools.gui.panels;
 
 import com.fooberticus.steamtools.models.steam.SteamPlayerBan;
 import com.fooberticus.steamtools.models.steam.SteamPlayerSummary;
+import com.fooberticus.steamtools.models.steamhistory.SourceBan;
+import com.fooberticus.steamtools.utils.GuiUtil;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.swing.*;
@@ -10,7 +12,6 @@ import javax.swing.table.TableRowSorter;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -22,13 +23,15 @@ public class VACBanPanel extends BaseResultsPanel {
 
     private final Map<Long, SteamPlayerSummary> steamPlayerSummaryMap;
     private final Map<Long, SteamPlayerBan> steamPlayerBanMap;
+    private final Map<Long, List<SourceBan>> sourceBanMap;
 
     private static final String[] HEADER_ROW = {"User Name", "Steam64 ID", "VAC Banned", "VAC Bans", "Game Bans", "Days Since Last", "Profile URL"};
 
-    public VACBanPanel(Map<Long, SteamPlayerSummary> steamPlayerSummaryMap, Map<Long, SteamPlayerBan> steamPlayerBanMap) {
+    public VACBanPanel(Map<Long, SteamPlayerSummary> steamPlayerSummaryMap, Map<Long, SteamPlayerBan> steamPlayerBanMap, Map<Long, List<SourceBan>> sourceBanMap) {
         super();
         this.steamPlayerSummaryMap = steamPlayerSummaryMap;
         this.steamPlayerBanMap = steamPlayerBanMap;
+        this.sourceBanMap = sourceBanMap;
         formatResults();
     }
 
@@ -53,6 +56,7 @@ public class VACBanPanel extends BaseResultsPanel {
         table.setEnabled(true);
         table.setDefaultEditor(Object.class, null);
         table.setShowGrid(true);
+        table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
         TableRowSorter<TableModel> sorter = new TableRowSorter<>(table.getModel());
         table.setRowSorter(sorter);
@@ -70,14 +74,12 @@ public class VACBanPanel extends BaseResultsPanel {
                 int row = jTable.rowAtPoint(point);
                 if (event.getClickCount() == 2 && jTable.getSelectedRow() != -1) {
                     String url = (String) table.getValueAt(row, 6);
-                    try {
-                        Desktop.getDesktop().browse(new URI( url ) );
-                    } catch (Exception e) {
-                        log.error(e.getMessage(), e);
-                    }
+                    GuiUtil.openURLInBrowser(url);
                 }
             }
         });
+
+        table.addMouseListener(new PopUpMenuClickListener(steamPlayerSummaryMap, steamPlayerBanMap, sourceBanMap));
 
         scrollPane.setViewportView(table);
     }

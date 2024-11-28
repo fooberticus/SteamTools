@@ -1,7 +1,9 @@
 package com.fooberticus.steamtools.gui.panels;
 
+import com.fooberticus.steamtools.models.steam.SteamPlayerBan;
 import com.fooberticus.steamtools.models.steamhistory.SourceBan;
 import com.fooberticus.steamtools.models.steam.SteamPlayerSummary;
+import com.fooberticus.steamtools.utils.GuiUtil;
 import com.fooberticus.steamtools.utils.SteamUtils;
 import lombok.extern.slf4j.Slf4j;
 
@@ -11,7 +13,6 @@ import javax.swing.table.TableRowSorter;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.net.URI;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,16 +24,18 @@ import static com.fooberticus.steamtools.utils.BanStates.*;
 @Slf4j
 public class CommunityBanPanel extends BaseResultsPanel {
 
-    private static final String STEAM_HISTORY_URI = "https://steamhistory.net/id/";
+    public static final String STEAM_HISTORY_URI = "https://steamhistory.net/id/";
 
     private static final String[] HEADER_ROW = {"User Name", "Steam64 ID", "Active Bans", "Total Bans", "Cheating Found", "Last Ban Date", "Last Ban Reason", "Steam History"};
 
     private final Map<Long, SteamPlayerSummary> steamPlayerSummaryMap;
+    private final Map<Long, SteamPlayerBan> steamPlayerBanMap;
     private final Map<Long, List<SourceBan>> sourceBanMap;
 
-    public CommunityBanPanel(final Map<Long, SteamPlayerSummary> steamPlayerSummaryMap, final Map<Long, List<SourceBan>> sourceBanMap) {
+    public CommunityBanPanel(final Map<Long, SteamPlayerSummary> steamPlayerSummaryMap, final Map<Long, SteamPlayerBan> steamPlayerBanMap, final Map<Long, List<SourceBan>> sourceBanMap) {
         super();
         this.steamPlayerSummaryMap = steamPlayerSummaryMap;
+        this.steamPlayerBanMap = steamPlayerBanMap;
         this.sourceBanMap = sourceBanMap;
         formatResults();
     }
@@ -96,6 +99,7 @@ public class CommunityBanPanel extends BaseResultsPanel {
         table.setEnabled(true);
         table.setDefaultEditor(Object.class, null);
         table.setShowGrid(true);
+        table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
         TableRowSorter<TableModel> sorter = new TableRowSorter<>(table.getModel());
         table.setRowSorter(sorter);
@@ -113,14 +117,12 @@ public class CommunityBanPanel extends BaseResultsPanel {
                 int row = jTable.rowAtPoint(point);
                 if (event.getClickCount() == 2 && jTable.getSelectedRow() != -1) {
                     String url = (String) table.getValueAt(row, 7);
-                    try {
-                        Desktop.getDesktop().browse(new URI( url ) );
-                    } catch (Exception e) {
-                        log.error(e.getMessage(), e);
-                    }
+                    GuiUtil.openURLInBrowser(url);
                 }
             }
         });
+
+        table.addMouseListener(new PopUpMenuClickListener(steamPlayerSummaryMap, steamPlayerBanMap, sourceBanMap));
 
         scrollPane.setViewportView(table);
     }
