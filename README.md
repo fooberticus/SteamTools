@@ -2,7 +2,7 @@
 
 Tools for checking Team Fortress 2 (TF2) players for VAC and community server bans. Know who you're playing with!
 
-![](img\all-players.png)
+![](https://github.com/fooberticus/SteamTools/blob/master/img/all-players.png)
 
 # Setup
 
@@ -13,7 +13,7 @@ Alternatively, you can clone this git project and with Maven installed, run `mvn
 
 The first time you run the program, you'll be presented with the Settings menu:
 
-![](img\settings.png)
+![](https://github.com/fooberticus/SteamTools/blob/master/img/settings.png)
 
 The first thing you need are API keys for the Steam API and SteamHistory.net API.
 
@@ -35,13 +35,13 @@ until you find a look and feel that you like best.
 
 This is the main window:
 
-![](img\empty-main.png)
+![](https://github.com/fooberticus/SteamTools/blob/master/img/empty-main.png)
 
 In the text field of this window, you can input any number of Steam32 IDs -- Steam IDs that look like [U:1:12345678].
 The most common way to use this tool is to open the console while playing TF2, type in the command `status`, then copy the
 text that comes out and paste it into this text box (you can **right-click to paste** into this window to save time):
 
-![](img\pasted-main.png)
+![](https://github.com/fooberticus/SteamTools/blob/master/img/pasted-main.png)
 
 The text you copy and paste doesn't have to be precise, just make sure it contains the Steam32 IDs that you want to research.
 
@@ -50,17 +50,17 @@ Next, click the Check Users button and wait a second or two, and the results of 
 If any of the checked Steam IDs have a VAC or Steam Game ban associated, the Steam Bans tab will appear with their name and
 some info about their bans shown. You can double-click a row of player data to open their Steam profile page and have a closer look:
 
-![](img\steam-bans.png)
+![](https://github.com/fooberticus/SteamTools/blob/master/img/steam-bans.png)
 
 Likewise, if any Steam IDs have community server bans, the Community Bans tab will be present with the player's name and ban summary.
 Again, you can double-click a row of player data to open their page on SteamHistory.net and see more details about all their community bans:
 
-![](img\community-bans.png)
+![](https://github.com/fooberticus/SteamTools/blob/master/img/community-bans.png)
 
 Finally, on the All Players tab you'll see a summary of all players on the server, whether they have a ban or not. Double click
 their row to open their Steam Profile to have a closer look:
 
-![](img\all-players.png)
+![](https://github.com/fooberticus/SteamTools/blob/master/img/all-players.png)
 
 And that's it for now. More features are being added, but as of now this is a handy way to quickly find out if you are playing
 with anyone who has a known record of cheating in TF2!
