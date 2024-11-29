@@ -43,6 +43,6 @@ public final class SteamUtils {
     }
 
     public static boolean isBanReasonCheating(final String reason) {
-        return StringUtils.containsAnyIgnoreCase(reason, "cheat", "bot", "hack", "lmaobox");
+        return StringUtils.containsAnyIgnoreCase(reason, "cheat", "aim", "bot", "hack", "lmaobox", "smac", "silent");
     }
 }
