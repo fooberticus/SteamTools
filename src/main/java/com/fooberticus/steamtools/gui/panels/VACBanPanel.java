@@ -42,6 +42,10 @@ public class VACBanPanel extends BaseResultsPanel {
 
         for (int i = 0; i < ids.size(); i++) {
             Long id = ids.get(i);
+            if (!steamPlayerSummaryMap.containsKey(id)) {
+                log.info("steam64 id {} is in steamPlayerBanMap, but not in steamPlayerSummaryMap", id);
+                continue;
+            }
             String[] values = { steamPlayerSummaryMap.get(id).getPersonaname(),
                     id.toString(),
                     steamPlayerBanMap.get(id).getVACBanned() ? "Yes" : "--",
