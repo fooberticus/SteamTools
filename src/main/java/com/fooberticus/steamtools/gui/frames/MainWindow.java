@@ -170,7 +170,11 @@ public class MainWindow extends JFrame {
         loadSteamBans(userIds);
         loadSteamHistory(userIds);
 
-        ResultsWindow.startResultsWindow(sourceBanMap, steamPlayerBanMap, steamPlayerSummaryMap);
+        ResultsWindow.startResultsWindow(new HashMap<>(sourceBanMap), new HashMap<>(steamPlayerBanMap), new HashMap<>(steamPlayerSummaryMap));
+
+        sourceBanMap.clear();
+        steamPlayerBanMap.clear();
+        steamPlayerSummaryMap.clear();
 
         enableButtons();
     }
