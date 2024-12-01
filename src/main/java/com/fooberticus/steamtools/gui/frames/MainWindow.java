@@ -2,6 +2,7 @@ package com.fooberticus.steamtools.gui.frames;
 
 import java.awt.*;
 
+import com.fooberticus.steamtools.gui.panels.LoadingPanel;
 import com.fooberticus.steamtools.models.steam.SteamPlayerBan;
 import com.fooberticus.steamtools.models.steam.SteamPlayerBansResponse;
 import com.fooberticus.steamtools.models.steam.SteamPlayerSummary;
@@ -131,7 +132,7 @@ public class MainWindow extends JFrame {
     }
 
     private void showLoadingDialog(SwingWorker<Void, Void> mySwingWorker, String labelText) {
-        final JDialog dialog = new JDialog(this, labelText, Dialog.ModalityType.APPLICATION_MODAL);
+        final JDialog dialog = new JDialog(this, null, Dialog.ModalityType.APPLICATION_MODAL);
 
         mySwingWorker.addPropertyChangeListener(evt -> {
             if (evt.getPropertyName().equals("state")) {
@@ -142,18 +143,7 @@ public class MainWindow extends JFrame {
         });
         mySwingWorker.execute();
 
-        JProgressBar progressBar = new JProgressBar();
-        progressBar.setIndeterminate(true);
-
-        JPanel panel = new JPanel();
-        panel.setLayout(new BorderLayout());
-        panel.add(progressBar, BorderLayout.CENTER);
-
-        panel.setPreferredSize(new Dimension(
-                GuiUtil.getSavedWindowWidth("Main") / 2,
-                (int) progressBar.getPreferredSize().getHeight() * 2) );
-
-        dialog.add(panel);
+        dialog.add(new LoadingPanel(labelText));
         dialog.pack();
         dialog.setLocationRelativeTo(this);
         dialog.setVisible(true);
