@@ -1,4 +1,5 @@
 jpackage/jars/*
+jpackage/SteamTools/
 
 target/
 !.mvn/wrapper/maven-wrapper.jar
