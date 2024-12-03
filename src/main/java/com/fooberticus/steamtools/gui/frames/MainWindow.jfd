@@ -4,8 +4,8 @@ new FormModel {
 	contentType: "form/swing"
 	root: new FormRoot {
 		add( new FormWindow( "javax.swing.JFrame", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
-			"$horizontalGroup": "par l {seq t {space :::p, par t {comp scrollPane1::::486:x, seq {space :0:271:x, comp checkUsersButton:::p::p, space u:::p, comp clearButton:::p::p}}, space :::p}}"
-			"$verticalGroup": "par l {seq t {space :::p, comp scrollPane1::::258:x, space u:::p, par b {comp clearButton::b:p::p, comp checkUsersButton::b:p::p}, space :::p}}"
+			"$horizontalGroup": "par l {seq t {space :0:275:x, comp checkUsersButton:::p::p, space :::p, comp clearButton:::p::p, space :p:14:p}, seq t {space :::p, comp scrollPane1::::486:x, space :::p}}"
+			"$verticalGroup": "par l {seq t {space :::p, comp scrollPane1::::262:x, space u:::p, par b {comp clearButton::b:p::p, comp checkUsersButton::b:p::p}, space :p:14:p}}"
 		} ) {
 			name: "this"
 			"visible": true
@@ -42,7 +42,7 @@ new FormModel {
 			}
 		}, new FormLayoutConstraints( null ) {
 			"location": new java.awt.Point( 0, 0 )
-			"size": new java.awt.Dimension( 400, 300 )
+			"size": new java.awt.Dimension( 400, 310 )
 		} )
 	}
 }
