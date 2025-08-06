@@ -5,9 +5,9 @@ import com.formdev.flatlaf.IntelliJTheme;
 import com.formdev.flatlaf.extras.FlatAnimatedLafChange;
 import com.formdev.flatlaf.extras.FlatSVGUtils;
 import com.formdev.flatlaf.intellijthemes.*;
-import com.formdev.flatlaf.intellijthemes.materialthemeuilite.FlatMaterialDarkerIJTheme;
-import com.formdev.flatlaf.intellijthemes.materialthemeuilite.FlatMaterialOceanicIJTheme;
-import com.formdev.flatlaf.intellijthemes.materialthemeuilite.FlatNightOwlIJTheme;
+import com.formdev.flatlaf.intellijthemes.materialthemeuilite.FlatMTMaterialDarkerIJTheme;
+import com.formdev.flatlaf.intellijthemes.materialthemeuilite.FlatMTMaterialOceanicIJTheme;
+import com.formdev.flatlaf.intellijthemes.materialthemeuilite.FlatMTNightOwlIJTheme;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.swing.*;
@@ -54,12 +54,12 @@ public final class GuiUtil {
         themeMap.put("Material Dark", FlatMaterialDesignDarkIJTheme.class);
         themeMap.put("Arc Dark Orange", FlatArcDarkOrangeIJTheme.class);
         themeMap.put("Spacegray", FlatSpacegrayIJTheme.class);
-        themeMap.put("Night Owl", FlatNightOwlIJTheme.class);
-        themeMap.put("Material Oceanic", FlatMaterialOceanicIJTheme.class);
+        themeMap.put("Night Owl", FlatMTNightOwlIJTheme.class);
+        themeMap.put("Material Oceanic", FlatMTMaterialOceanicIJTheme.class);
         themeMap.put("XCode Dark", FlatXcodeDarkIJTheme.class);
         themeMap.put("Monokai Pro", FlatMonokaiProIJTheme.class);
         themeMap.put("High Contrast", FlatHighContrastIJTheme.class);
-        themeMap.put("Material Darker", FlatMaterialDarkerIJTheme.class);
+        themeMap.put("Material Darker", FlatMTMaterialDarkerIJTheme.class);
         themeMap.put("Dracula", FlatDraculaIJTheme.class);
         themeMap.put("Vuesion", FlatVuesionIJTheme.class);
         themeMap.put("Hiberbee", FlatHiberbeeDarkIJTheme.class);
