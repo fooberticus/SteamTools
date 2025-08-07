@@ -1,12 +1,14 @@
 package com.fooberticus.steamtools.utils;
 
+import com.fooberticus.steamtools.models.server.ServerPlayer;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
+@Slf4j
 public class SteamUtilsTest {
 
     public final static String STATUS_CHONK = "ng soldier for 1 year :  yeah thats why\n" +
@@ -51,6 +53,17 @@ public class SteamUtilsTest {
 
         assertEquals(20, userIds.size());
         assertTrue(userIds.contains(SteamUtils.STEAM_64_BASE + 1525843434));
+    }
+
+    @Test
+    public void getServerPlayersFromStatusText_returns_correct_list() {
+        List<ServerPlayer> serverPlayers = SteamUtils.getServerPlayersFromStatusText(STATUS_CHONK);
+        assertEquals(20, serverPlayers.size());
+        for (ServerPlayer serverPlayer : serverPlayers) {
+            assertNotNull(serverPlayer.getTimeOnServer());
+            assertNotNull(serverPlayer.getSteam64Id());
+            log.info("steam64id: {}, timeOnServer: {}", serverPlayer.getSteam64Id(), serverPlayer.getTimeOnServer());
+        }
     }
 
 }

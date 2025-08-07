@@ -3,6 +3,7 @@ package com.fooberticus.steamtools.gui.frames;
 import com.fooberticus.steamtools.gui.panels.AllUsersPanel;
 import com.fooberticus.steamtools.gui.panels.CommunityBanPanel;
 import com.fooberticus.steamtools.gui.panels.VACBanPanel;
+import com.fooberticus.steamtools.models.server.ServerPlayer;
 import com.fooberticus.steamtools.models.steam.SteamPlayerBan;
 import com.fooberticus.steamtools.models.steam.SteamPlayerSummary;
 import com.fooberticus.steamtools.models.steamhistory.SourceBan;
@@ -17,7 +18,7 @@ import java.util.Map;
  */
 public class ResultsWindow extends JFrame {
 
-    public ResultsWindow(Map<Long, List<SourceBan>> sourceBanMap, Map<Long, SteamPlayerBan> steamPlayerBanMap, Map<Long, SteamPlayerSummary> steamPlayerSummaryMap) {
+    public ResultsWindow(Map<Long, List<SourceBan>> sourceBanMap, Map<Long, SteamPlayerBan> steamPlayerBanMap, Map<Long, SteamPlayerSummary> steamPlayerSummaryMap, List<ServerPlayer> serverPlayers) {
         initComponents();
 
         if (!steamPlayerBanMap.isEmpty()) {
@@ -28,11 +29,11 @@ public class ResultsWindow extends JFrame {
             resultsTabbedPane.add("Community Bans", new CommunityBanPanel(steamPlayerSummaryMap, steamPlayerBanMap, sourceBanMap));
         }
 
-        resultsTabbedPane.add("All Players", new AllUsersPanel(steamPlayerSummaryMap, steamPlayerBanMap, sourceBanMap));
+        resultsTabbedPane.add("All Players", new AllUsersPanel(steamPlayerSummaryMap, steamPlayerBanMap, sourceBanMap, serverPlayers));
     }
 
-    public static void startResultsWindow(Map<Long, List<SourceBan>> sourceBanMap, Map<Long, SteamPlayerBan> steamPlayerBanMap, Map<Long, SteamPlayerSummary> steamPlayerSummaryMap) {
-        GuiUtil.initWindow( new ResultsWindow(sourceBanMap, steamPlayerBanMap, steamPlayerSummaryMap), "Results" );
+    public static void startResultsWindow(Map<Long, List<SourceBan>> sourceBanMap, Map<Long, SteamPlayerBan> steamPlayerBanMap, Map<Long, SteamPlayerSummary> steamPlayerSummaryMap, List<ServerPlayer> serverPlayers) {
+        GuiUtil.initWindow( new ResultsWindow(sourceBanMap, steamPlayerBanMap, steamPlayerSummaryMap, serverPlayers), "Results" );
     }
 
     private void initComponents() {
