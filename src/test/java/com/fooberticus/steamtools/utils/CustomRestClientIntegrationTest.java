@@ -1,5 +1,6 @@
 package com.fooberticus.steamtools.utils;
 
+import com.fooberticus.steamtools.models.server.ServerPlayer;
 import com.fooberticus.steamtools.models.steamhistory.SourceBan;
 import com.fooberticus.steamtools.models.steamhistory.SourceBanResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -22,11 +23,11 @@ public class CustomRestClientIntegrationTest {
 
     @Test
     public void testMakingRequestsToSteamHistory() throws Exception {
-        List<Long> userIds = SteamUtils.getUserIdsFromText( SteamUtilsTest.STATUS_CHONK );
+        List<ServerPlayer> serverPlayers = SteamUtils.getServerPlayersFromStatusText( SteamUtilsTest.STATUS_CHONK );
 
-        assertEquals(20, userIds.size());
+        assertEquals(20, serverPlayers.size());
 
-        SourceBanResponse response = client.getSourceBans(userIds);
+        SourceBanResponse response = client.getSourceBans( serverPlayers );
 
         assertNotNull(response);
 
