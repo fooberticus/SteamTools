@@ -1,5 +1,6 @@
 package com.fooberticus.steamtools.utils;
 
+import com.fooberticus.steamtools.models.server.ServerPlayer;
 import com.fooberticus.steamtools.models.steamhistory.SourceBanResponse;
 import com.fooberticus.steamtools.models.steam.SteamPlayerBansResponse;
 import com.fooberticus.steamtools.models.steam.SteamPlayerSummaryResponse;
@@ -8,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.juneau.rest.client.RestClient;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -23,19 +25,22 @@ public final class CustomRestClient {
         gson = new Gson();
     }
 
-    public SourceBanResponse getSourceBans(List<Long> steam64Ids) {
+    public SourceBanResponse getSourceBans(List<ServerPlayer> serverPlayers) {
+        List<Long> steam64Ids = SteamUtils.getPlayerIdsFromServerPlayerList(serverPlayers);
         String ids = StringUtils.join(steam64Ids, ",");
         String url = STEAM_HISTORY_ENDPOINT + "?key=" + GuiUtil.getSavedSteamHistoryApiKey() + "&steamids=" + ids;
         return getRequest(url, SourceBanResponse.class);
     }
 
-    public SteamPlayerBansResponse getSteamPlayerBans(List<Long> steam64Ids) {
+    public SteamPlayerBansResponse getSteamPlayerBans(List<ServerPlayer> serverPlayers) {
+        List<Long> steam64Ids = SteamUtils.getPlayerIdsFromServerPlayerList(serverPlayers);
         String ids = StringUtils.join(steam64Ids, ",");
         String url = STEAM_API_PLAYER_BANS_ENDPOINT + "?key=" + GuiUtil.getSavedSteamApiKey() + "&steamids=" + ids;
         return getRequest(url, SteamPlayerBansResponse.class);
     }
 
-    public SteamPlayerSummaryResponse getSteamPlayerSummaries(List<Long> steam64Ids) {
+    public SteamPlayerSummaryResponse getSteamPlayerSummaries(List<ServerPlayer> serverPlayers) {
+        List<Long> steam64Ids = SteamUtils.getPlayerIdsFromServerPlayerList(serverPlayers);
         String ids = StringUtils.join(steam64Ids, ",");
         String url = STEAM_API_PLAYER_SUMMARY_ENDPOINT + "?key=" + GuiUtil.getSavedSteamApiKey() + "&steamids=" + ids;
         return getRequest(url, SteamPlayerSummaryResponse.class);

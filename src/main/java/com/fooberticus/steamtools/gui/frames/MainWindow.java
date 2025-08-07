@@ -3,6 +3,7 @@ package com.fooberticus.steamtools.gui.frames;
 import java.awt.*;
 
 import com.fooberticus.steamtools.gui.panels.LoadingPanel;
+import com.fooberticus.steamtools.models.server.ServerPlayer;
 import com.fooberticus.steamtools.models.steam.SteamPlayerBan;
 import com.fooberticus.steamtools.models.steam.SteamPlayerBansResponse;
 import com.fooberticus.steamtools.models.steam.SteamPlayerSummary;
@@ -70,11 +71,11 @@ public class MainWindow extends JFrame {
         statusTextArea.requestFocusInWindow();
     }
 
-    private void loadSteamHistory(List<Long> userIds) {
+    private void loadSteamHistory(List<ServerPlayer> serverPlayers) {
         SwingWorker<Void, Void> mySwingWorker = new SwingWorker<>(){
             @Override
             protected Void doInBackground() throws Exception {
-                SourceBanResponse steamHistoryResponse = client.getSourceBans( userIds );
+                SourceBanResponse steamHistoryResponse = client.getSourceBans( serverPlayers );
                 if (steamHistoryResponse != null
                         && steamHistoryResponse.getResponse() != null
                         && !steamHistoryResponse.getResponse().isEmpty()) {
@@ -91,11 +92,11 @@ public class MainWindow extends JFrame {
         showLoadingDialog(mySwingWorker, "checking for community bans...");
     }
 
-    private void loadSteamBans(List<Long> userIds) {
+    private void loadSteamBans(List<ServerPlayer> serverPlayers) {
         SwingWorker<Void, Void> mySwingWorker = new SwingWorker<>(){
             @Override
             protected Void doInBackground() throws Exception {
-                SteamPlayerBansResponse steamPlayerBansResponse = client.getSteamPlayerBans( userIds );
+                SteamPlayerBansResponse steamPlayerBansResponse = client.getSteamPlayerBans( serverPlayers );
                 if (steamPlayerBansResponse != null
                         && steamPlayerBansResponse.getPlayers() != null
                         && !steamPlayerBansResponse.getPlayers().isEmpty()) {
@@ -113,11 +114,11 @@ public class MainWindow extends JFrame {
         showLoadingDialog(mySwingWorker, "checking for steam bans...");
     }
 
-    private void loadSteamSummaries(List<Long> userIds) {
+    private void loadSteamSummaries(List<ServerPlayer> serverPlayers) {
         SwingWorker<Void, Void> mySwingWorker = new SwingWorker<>(){
             @Override
             protected Void doInBackground() throws Exception {
-                SteamPlayerSummaryResponse steamPlayerSummaryResponse = client.getSteamPlayerSummaries( userIds );
+                SteamPlayerSummaryResponse steamPlayerSummaryResponse = client.getSteamPlayerSummaries( serverPlayers );
                 if (steamPlayerSummaryResponse != null
                         && steamPlayerSummaryResponse.getResponse() != null
                         && !steamPlayerSummaryResponse.getResponse().players().isEmpty()) {
@@ -158,19 +159,19 @@ public class MainWindow extends JFrame {
             return;
         }
 
-        List<Long> userIds = SteamUtils.getUserIdsFromText( statusTextArea.getText() );
-        if (userIds.isEmpty()) {
+        List<ServerPlayer> serverPlayers = SteamUtils.getServerPlayersFromStatusText( statusTextArea.getText() );
+        if (serverPlayers.isEmpty()) {
             JOptionPane.showMessageDialog(this, "No user IDs found in text.");
             return;
         }
 
         disableButtons();
 
-        loadSteamSummaries(userIds);
-        loadSteamBans(userIds);
-        loadSteamHistory(userIds);
+        loadSteamSummaries(serverPlayers);
+        loadSteamBans(serverPlayers);
+        loadSteamHistory(serverPlayers);
 
-        ResultsWindow.startResultsWindow(new HashMap<>(sourceBanMap), new HashMap<>(steamPlayerBanMap), new HashMap<>(steamPlayerSummaryMap));
+        ResultsWindow.startResultsWindow(new HashMap<>(sourceBanMap), new HashMap<>(steamPlayerBanMap), new HashMap<>(steamPlayerSummaryMap), serverPlayers);
 
         sourceBanMap.clear();
         steamPlayerBanMap.clear();
