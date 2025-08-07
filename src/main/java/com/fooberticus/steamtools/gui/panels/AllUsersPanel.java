@@ -25,7 +25,7 @@ public class AllUsersPanel extends BaseResultsPanel {
 
     public static final String STEAM_COMMUNITY_URI = "https://steamcommunity.com/profiles/";
 
-    private static final String[] HEADER_ROW = {"User Name", "Time on Server", "Steam64 ID", "Steam32 ID", "Profile Visibility", "Profile Created", "Profile URL"};
+    private static final String[] HEADER_ROW = {"User Name", "Steam64 ID", "Steam32 ID", "Time on Server", "Profile Visibility", "Profile Created", "Profile URL"};
 
     private final Map<Long, SteamPlayerSummary> playerSummaryMap;
     private final Map<Long, SteamPlayerBan> steamPlayerBanMap;
@@ -54,9 +54,9 @@ public class AllUsersPanel extends BaseResultsPanel {
             Long timeCreated = playerSummaryMap.get(id).getTimecreated();
             LocalDate createdDate = SteamUtils.getLocalDateFromTimestamp(timeCreated);
             String[] values = { playerSummaryMap.get(id).getPersonaname(),
-                    serverPlayerMap.get(id).getTimeOnServer(),
                     id.toString(),
                     SteamUtils.getSteamID32FromSteamID64(id),
+                    serverPlayerMap.get(id).getTimeOnServer(),
                     playerSummaryMap.get(id).getCommunityvisibilitystate() == 3 ? "public" : "PRIVATE",
                     createdDate == null ? "--" : createdDate.toString(),
                     STEAM_COMMUNITY_URI + id };
@@ -82,7 +82,7 @@ public class AllUsersPanel extends BaseResultsPanel {
                 Point point = event.getPoint();
                 int row = jTable.rowAtPoint(point);
                 if (event.getClickCount() == 2 && jTable.getSelectedRow() != -1) {
-                    String url = (String) table.getValueAt(row, 5);
+                    String url = (String) table.getValueAt(row, 6);
                     GuiUtil.openURLInBrowser(url);
                 }
             }
