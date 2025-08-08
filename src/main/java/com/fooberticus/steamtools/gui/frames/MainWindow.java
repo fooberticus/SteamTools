@@ -1,8 +1,8 @@
 package com.fooberticus.steamtools.gui.frames;
 
-import java.awt.*;
-
 import com.fooberticus.steamtools.gui.panels.LoadingPanel;
+import com.fooberticus.steamtools.models.rentamedic.RentAMedicResponse;
+import com.fooberticus.steamtools.models.rentamedic.RentAMedicResult;
 import com.fooberticus.steamtools.models.server.ServerPlayer;
 import com.fooberticus.steamtools.models.steam.SteamPlayerBan;
 import com.fooberticus.steamtools.models.steam.SteamPlayerBansResponse;
@@ -16,11 +16,13 @@ import com.fooberticus.steamtools.utils.SteamUtils;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.swing.*;
-import javax.swing.GroupLayout;
+import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Fooberticus
@@ -33,11 +35,13 @@ public class MainWindow extends JFrame {
     Map<Long, List<SourceBan>> sourceBanMap;
     Map<Long, SteamPlayerBan> steamPlayerBanMap;
     Map<Long, SteamPlayerSummary> steamPlayerSummaryMap;
+    Map<Long, RentAMedicResult> rentAMedicResultMap;
 
     public MainWindow() {
         sourceBanMap = new HashMap<>();
         steamPlayerBanMap = new HashMap<>();
         steamPlayerSummaryMap = new HashMap<>();
+        rentAMedicResultMap = new HashMap<>();
 
         initComponents();
 
@@ -132,6 +136,25 @@ public class MainWindow extends JFrame {
         showLoadingDialog(mySwingWorker, "retrieving user info...");
     }
 
+    private void loadRentAMedicCheaters(List<ServerPlayer> serverPlayers) {
+        SwingWorker<Void, Void> mySwingWorker = new SwingWorker<>() {
+            @Override
+            protected Void doInBackground() throws Exception {
+                RentAMedicResponse response = client.getRentAMedicCheaters(serverPlayers);
+                if (response != null && response.getResults() != null && !response.getResults().isEmpty()) {
+                    response.getResults().forEach(result -> {
+                        if (result.isCheater()) {
+                            rentAMedicResultMap.put(Long.valueOf(result.getId()), result);
+                        }
+                    });
+                }
+                return null;
+            }
+        };
+
+        showLoadingDialog(mySwingWorker, "checking rent-a-medic for cheaters...");
+    }
+
     private void showLoadingDialog(SwingWorker<Void, Void> mySwingWorker, String labelText) {
         final JDialog dialog = new JDialog(this, null, Dialog.ModalityType.APPLICATION_MODAL);
 
@@ -169,12 +192,14 @@ public class MainWindow extends JFrame {
 
         loadSteamSummaries(serverPlayers);
         loadSteamBans(serverPlayers);
+        loadRentAMedicCheaters(serverPlayers);
         loadSteamHistory(serverPlayers);
 
-        ResultsWindow.startResultsWindow(new HashMap<>(sourceBanMap), new HashMap<>(steamPlayerBanMap), new HashMap<>(steamPlayerSummaryMap), serverPlayers);
+        ResultsWindow.startResultsWindow(new HashMap<>(sourceBanMap), new HashMap<>(steamPlayerBanMap), new HashMap<>(rentAMedicResultMap), new HashMap<>(steamPlayerSummaryMap), serverPlayers);
 
         sourceBanMap.clear();
         steamPlayerBanMap.clear();
+        rentAMedicResultMap.clear();
         steamPlayerSummaryMap.clear();
 
         enableButtons();

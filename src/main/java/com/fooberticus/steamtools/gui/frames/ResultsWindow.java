@@ -2,7 +2,9 @@ package com.fooberticus.steamtools.gui.frames;
 
 import com.fooberticus.steamtools.gui.panels.AllUsersPanel;
 import com.fooberticus.steamtools.gui.panels.CommunityBanPanel;
+import com.fooberticus.steamtools.gui.panels.RentAMedicPanel;
 import com.fooberticus.steamtools.gui.panels.VACBanPanel;
+import com.fooberticus.steamtools.models.rentamedic.RentAMedicResult;
 import com.fooberticus.steamtools.models.server.ServerPlayer;
 import com.fooberticus.steamtools.models.steam.SteamPlayerBan;
 import com.fooberticus.steamtools.models.steam.SteamPlayerSummary;
@@ -18,22 +20,26 @@ import java.util.Map;
  */
 public class ResultsWindow extends JFrame {
 
-    public ResultsWindow(Map<Long, List<SourceBan>> sourceBanMap, Map<Long, SteamPlayerBan> steamPlayerBanMap, Map<Long, SteamPlayerSummary> steamPlayerSummaryMap, List<ServerPlayer> serverPlayers) {
+    public ResultsWindow(Map<Long, List<SourceBan>> sourceBanMap, Map<Long, SteamPlayerBan> steamPlayerBanMap, Map<Long, RentAMedicResult> rentAMedicResultMap, Map<Long, SteamPlayerSummary> steamPlayerSummaryMap, List<ServerPlayer> serverPlayers) {
         initComponents();
 
         if (!steamPlayerBanMap.isEmpty()) {
-            resultsTabbedPane.add( "Steam Bans", new VACBanPanel( steamPlayerSummaryMap, steamPlayerBanMap, sourceBanMap ) );
+            resultsTabbedPane.add( "Steam Bans", new VACBanPanel( steamPlayerSummaryMap, steamPlayerBanMap, sourceBanMap, rentAMedicResultMap ) );
         }
 
         if (!sourceBanMap.isEmpty()) {
-            resultsTabbedPane.add("Community Bans", new CommunityBanPanel(steamPlayerSummaryMap, steamPlayerBanMap, sourceBanMap));
+            resultsTabbedPane.add("Community Bans", new CommunityBanPanel( steamPlayerSummaryMap, steamPlayerBanMap, sourceBanMap, rentAMedicResultMap ) );
         }
 
-        resultsTabbedPane.add("All Players", new AllUsersPanel(steamPlayerSummaryMap, steamPlayerBanMap, sourceBanMap, serverPlayers));
+        if (!rentAMedicResultMap.isEmpty()) {
+            resultsTabbedPane.add("Rent-A-Medic", new RentAMedicPanel( steamPlayerSummaryMap, steamPlayerBanMap, sourceBanMap, rentAMedicResultMap ) );
+        }
+
+        resultsTabbedPane.add("All Players", new AllUsersPanel(steamPlayerSummaryMap, steamPlayerBanMap, sourceBanMap, rentAMedicResultMap, serverPlayers));
     }
 
-    public static void startResultsWindow(Map<Long, List<SourceBan>> sourceBanMap, Map<Long, SteamPlayerBan> steamPlayerBanMap, Map<Long, SteamPlayerSummary> steamPlayerSummaryMap, List<ServerPlayer> serverPlayers) {
-        GuiUtil.initWindow( new ResultsWindow(sourceBanMap, steamPlayerBanMap, steamPlayerSummaryMap, serverPlayers), "Results" );
+    public static void startResultsWindow(Map<Long, List<SourceBan>> sourceBanMap, Map<Long, SteamPlayerBan> steamPlayerBanMap, Map<Long, RentAMedicResult> rentAMedicResultMap, Map<Long, SteamPlayerSummary> steamPlayerSummaryMap, List<ServerPlayer> serverPlayers) {
+        GuiUtil.initWindow( new ResultsWindow(sourceBanMap, steamPlayerBanMap, rentAMedicResultMap, steamPlayerSummaryMap, serverPlayers), "Results" );
     }
 
     private void initComponents() {

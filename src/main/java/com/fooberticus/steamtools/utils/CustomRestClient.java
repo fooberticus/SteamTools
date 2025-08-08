@@ -1,15 +1,15 @@
 package com.fooberticus.steamtools.utils;
 
+import com.fooberticus.steamtools.models.rentamedic.RentAMedicResponse;
 import com.fooberticus.steamtools.models.server.ServerPlayer;
-import com.fooberticus.steamtools.models.steamhistory.SourceBanResponse;
 import com.fooberticus.steamtools.models.steam.SteamPlayerBansResponse;
 import com.fooberticus.steamtools.models.steam.SteamPlayerSummaryResponse;
+import com.fooberticus.steamtools.models.steamhistory.SourceBanResponse;
 import com.google.gson.Gson;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.juneau.rest.client.RestClient;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -18,6 +18,7 @@ public final class CustomRestClient {
     public static final String STEAM_HISTORY_ENDPOINT = "https://steamhistory.net/api/sourcebans";
     public static final String STEAM_API_PLAYER_BANS_ENDPOINT = "https://api.steampowered.com/ISteamUser/GetPlayerBans/v1/";
     public static final String STEAM_API_PLAYER_SUMMARY_ENDPOINT = "https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/";
+    public static final String RENT_A_MEDIC_ENDPOINT = "https://rentamedic.org/api/cheaters/lookup";
 
     private static final Gson gson;
 
@@ -44,6 +45,13 @@ public final class CustomRestClient {
         String ids = StringUtils.join(steam64Ids, ",");
         String url = STEAM_API_PLAYER_SUMMARY_ENDPOINT + "?key=" + GuiUtil.getSavedSteamApiKey() + "&steamids=" + ids;
         return getRequest(url, SteamPlayerSummaryResponse.class);
+    }
+
+    public RentAMedicResponse getRentAMedicCheaters(List<ServerPlayer> serverPlayers) {
+        List<Long> steam64Ids = SteamUtils.getPlayerIdsFromServerPlayerList(serverPlayers);
+        String ids = StringUtils.join(steam64Ids, ",");
+        String url = RENT_A_MEDIC_ENDPOINT + "?steamids=" + ids;
+        return getRequest(url, RentAMedicResponse.class);
     }
 
     /** Reusable method for making GET requests.

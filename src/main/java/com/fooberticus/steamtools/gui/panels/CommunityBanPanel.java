@@ -1,8 +1,9 @@
 package com.fooberticus.steamtools.gui.panels;
 
+import com.fooberticus.steamtools.models.rentamedic.RentAMedicResult;
 import com.fooberticus.steamtools.models.steam.SteamPlayerBan;
-import com.fooberticus.steamtools.models.steamhistory.SourceBan;
 import com.fooberticus.steamtools.models.steam.SteamPlayerSummary;
+import com.fooberticus.steamtools.models.steamhistory.SourceBan;
 import com.fooberticus.steamtools.utils.GuiUtil;
 import com.fooberticus.steamtools.utils.SteamUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -19,7 +20,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.fooberticus.steamtools.utils.BanStates.*;
+import static com.fooberticus.steamtools.utils.BanStates.PERMANENT;
+import static com.fooberticus.steamtools.utils.BanStates.TEMP_BAN;
 
 @Slf4j
 public class CommunityBanPanel extends BaseResultsPanel {
@@ -31,12 +33,14 @@ public class CommunityBanPanel extends BaseResultsPanel {
     private final Map<Long, SteamPlayerSummary> steamPlayerSummaryMap;
     private final Map<Long, SteamPlayerBan> steamPlayerBanMap;
     private final Map<Long, List<SourceBan>> sourceBanMap;
+    private final Map<Long, RentAMedicResult> rentAMedicResultMap;
 
-    public CommunityBanPanel(final Map<Long, SteamPlayerSummary> steamPlayerSummaryMap, final Map<Long, SteamPlayerBan> steamPlayerBanMap, final Map<Long, List<SourceBan>> sourceBanMap) {
+    public CommunityBanPanel(Map<Long, SteamPlayerSummary> steamPlayerSummaryMap, Map<Long, SteamPlayerBan> steamPlayerBanMap, Map<Long, List<SourceBan>> sourceBanMap, Map<Long, RentAMedicResult> rentAMedicResultMap) {
         super();
         this.steamPlayerSummaryMap = steamPlayerSummaryMap;
         this.steamPlayerBanMap = steamPlayerBanMap;
         this.sourceBanMap = sourceBanMap;
+        this.rentAMedicResultMap = rentAMedicResultMap;
         formatResults();
     }
 
@@ -122,7 +126,7 @@ public class CommunityBanPanel extends BaseResultsPanel {
             }
         });
 
-        table.addMouseListener(new PopUpMenuClickListener(steamPlayerSummaryMap, steamPlayerBanMap, sourceBanMap));
+        table.addMouseListener(new PopUpMenuClickListener(steamPlayerSummaryMap, steamPlayerBanMap, sourceBanMap, rentAMedicResultMap));
 
         scrollPane.setViewportView(table);
     }

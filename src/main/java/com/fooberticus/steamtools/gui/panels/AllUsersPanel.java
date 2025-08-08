@@ -1,5 +1,6 @@
 package com.fooberticus.steamtools.gui.panels;
 
+import com.fooberticus.steamtools.models.rentamedic.RentAMedicResult;
 import com.fooberticus.steamtools.models.server.ServerPlayer;
 import com.fooberticus.steamtools.models.steam.SteamPlayerBan;
 import com.fooberticus.steamtools.models.steam.SteamPlayerSummary;
@@ -31,12 +32,14 @@ public class AllUsersPanel extends BaseResultsPanel {
     private final Map<Long, SteamPlayerBan> steamPlayerBanMap;
     private final Map<Long, List<SourceBan>> sourceBanMap;
     private final Map<Long, ServerPlayer> serverPlayerMap;
+    private final Map<Long, RentAMedicResult> rentAMedicResultMap;
 
-    public AllUsersPanel (final Map<Long, SteamPlayerSummary> playerSummaryMap, final Map<Long, SteamPlayerBan> steamPlayerBanMap, final Map<Long, List<SourceBan>> sourceBanMap, List<ServerPlayer> serverPlayers) {
+    public AllUsersPanel (Map<Long, SteamPlayerSummary> steamPlayerSummaryMap, Map<Long, SteamPlayerBan> steamPlayerBanMap, Map<Long, List<SourceBan>> sourceBanMap, Map<Long, RentAMedicResult> rentAMedicResultMap, List<ServerPlayer> serverPlayers) {
         super();
-        this.playerSummaryMap = playerSummaryMap;
+        this.playerSummaryMap = steamPlayerSummaryMap;
         this.steamPlayerBanMap = steamPlayerBanMap;
         this.sourceBanMap = sourceBanMap;
+        this.rentAMedicResultMap = rentAMedicResultMap;
 
         serverPlayerMap = new HashMap<>();
         serverPlayers.forEach(serverPlayer -> serverPlayerMap.put( serverPlayer.getSteam64Id(), serverPlayer ) );
@@ -88,7 +91,7 @@ public class AllUsersPanel extends BaseResultsPanel {
             }
         });
 
-        table.addMouseListener(new PopUpMenuClickListener(playerSummaryMap, steamPlayerBanMap, sourceBanMap));
+        table.addMouseListener(new PopUpMenuClickListener(playerSummaryMap, steamPlayerBanMap, sourceBanMap, rentAMedicResultMap));
 
         scrollPane.setViewportView(table);
     }
