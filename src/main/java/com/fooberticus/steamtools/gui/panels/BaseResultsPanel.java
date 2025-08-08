@@ -1,5 +1,6 @@
 package com.fooberticus.steamtools.gui.panels;
 
+import com.fooberticus.steamtools.models.rentamedic.RentAMedicResult;
 import com.fooberticus.steamtools.models.steam.SteamPlayerBan;
 import com.fooberticus.steamtools.models.steam.SteamPlayerSummary;
 import com.fooberticus.steamtools.models.steamhistory.SourceBan;
@@ -18,6 +19,7 @@ import java.util.Map;
 
 import static com.fooberticus.steamtools.gui.panels.AllUsersPanel.STEAM_COMMUNITY_URI;
 import static com.fooberticus.steamtools.gui.panels.CommunityBanPanel.STEAM_HISTORY_URI;
+import static com.fooberticus.steamtools.gui.panels.RentAMedicPanel.RENT_A_MEDIC_URI;
 
 @Slf4j
 public class BaseResultsPanel extends JPanel {
@@ -57,15 +59,18 @@ public class BaseResultsPanel extends JPanel {
         Map<Long, SteamPlayerSummary> playerSummaryMap;
         Map<Long, SteamPlayerBan> steamPlayerBanMap;
         Map<Long, List<SourceBan>> steamHistoryMap;
+        Map<Long, RentAMedicResult> rentAMedicResultMap;
         Long playerId;
 
         public PopUpMenu(Map<Long, SteamPlayerSummary> playerSummaryMap,
                          Map<Long, SteamPlayerBan> steamPlayerBanMap,
                          Map<Long, List<SourceBan>> steamHistoryMap,
+                         Map<Long, RentAMedicResult> rentAMedicResultMap,
                          Long steam64Id) {
             this.playerSummaryMap = playerSummaryMap;
             this.steamPlayerBanMap = steamPlayerBanMap;
             this.steamHistoryMap = steamHistoryMap;
+            this.rentAMedicResultMap = rentAMedicResultMap;
             this.playerId = steam64Id;
             initMenus();
         }
@@ -83,6 +88,11 @@ public class BaseResultsPanel extends JPanel {
             steamHistoryMenuItem.setActionCommand("communityHistory");
             steamHistoryMenuItem.addActionListener(this);
             add(steamHistoryMenuItem);
+
+            JMenuItem rentAMedicMenuItem = new JMenuItem("Rent a Medic");
+            rentAMedicMenuItem.setActionCommand("rentAMedic");
+            rentAMedicMenuItem.addActionListener(this);
+            add(rentAMedicMenuItem);
 
             JMenu copyMenu = new JMenu( "Copy" );
             add(copyMenu);
@@ -111,6 +121,11 @@ public class BaseResultsPanel extends JPanel {
             copySteamHistoryURL.setActionCommand("copySteamHistoryURL");
             copySteamHistoryURL.addActionListener( this );
             copyMenu.add(copySteamHistoryURL);
+
+            JMenuItem copyRentAMedicURL = new JMenuItem( "Rent a Medic URL" );
+            copyRentAMedicURL.setActionCommand("copyRentAMedicURL");
+            copyRentAMedicURL.addActionListener( this );
+            copyMenu.add(copyRentAMedicURL);
         }
 
         private void openSteamProfile() {
@@ -121,6 +136,11 @@ public class BaseResultsPanel extends JPanel {
         private void openSteamHistory() {
             log.info("opening steam history for {}", playerId);
             GuiUtil.openURLInBrowser(STEAM_HISTORY_URI + playerId);
+        }
+
+        private void openRentAMedic() {
+            log.info("opening rent a medic for {}", playerId);
+            GuiUtil.openURLInBrowser(RENT_A_MEDIC_URI + playerId);
         }
 
         private void copyUserName() {
@@ -148,16 +168,23 @@ public class BaseResultsPanel extends JPanel {
             GuiUtil.copyToClipboard( STEAM_HISTORY_URI + playerId.toString() );
         }
 
+        private void copyRentAMedicURL() {
+            log.info("copying rent a medic url for {}", playerId);
+            GuiUtil.copyToClipboard( RENT_A_MEDIC_URI + playerId.toString() );
+        }
+
         @Override
         public void actionPerformed(ActionEvent e) {
             switch (e.getActionCommand()) {
                 case "steamProfile": openSteamProfile(); break;
                 case "communityHistory": openSteamHistory(); break;
+                case "rentAMedic": openRentAMedic(); break;
                 case "copyPlayer": copyUserName(); break;
                 case "copySteam64ID": copySteam64ID(); break;
                 case "copySteam32ID": copySteam32ID(); break;
                 case "copySteamProfileURL": copySteamProfileURL(); break;
                 case "copySteamHistoryURL": copySteamHistoryProfileURL(); break;
+                case "copyRentAMedicURL": copyRentAMedicURL(); break;
                 default: break;
             }
         }
@@ -168,13 +195,16 @@ public class BaseResultsPanel extends JPanel {
         Map<Long, SteamPlayerSummary> playerSummaryMap;
         Map<Long, SteamPlayerBan> steamPlayerBanMap;
         Map<Long, List<SourceBan>> steamHistoryMap;
+        Map<Long, RentAMedicResult> rentAMedicResultMap;
 
         public PopUpMenuClickListener(Map<Long, SteamPlayerSummary> playerSummaryMap,
                                       Map<Long, SteamPlayerBan> steamPlayerBanMap,
-                                      Map<Long, List<SourceBan>> steamHistoryMap) {
+                                      Map<Long, List<SourceBan>> steamHistoryMap,
+                                      Map<Long, RentAMedicResult> rentAMedicResultMap) {
             this.playerSummaryMap = playerSummaryMap;
             this.steamPlayerBanMap = steamPlayerBanMap;
             this.steamHistoryMap = steamHistoryMap;
+            this.rentAMedicResultMap = rentAMedicResultMap;
         }
 
         public void mouseReleased(MouseEvent e) {
@@ -193,7 +223,7 @@ public class BaseResultsPanel extends JPanel {
             // this relies on the 2nd column to always be the Steam64 ID
             Long id = Long.valueOf( (String) jTable.getValueAt(row, 1) );
 
-            PopUpMenu menu = new PopUpMenu(playerSummaryMap, steamPlayerBanMap, steamHistoryMap, id);
+            PopUpMenu menu = new PopUpMenu(playerSummaryMap, steamPlayerBanMap, steamHistoryMap, rentAMedicResultMap, id);
             menu.show(e.getComponent(), e.getX(), e.getY());
         }
     }
