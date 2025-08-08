@@ -3,5 +3,6 @@
 --name SteamTools
 --vendor Fooberticus
 --app-image SteamTools
+--app-version 1.6.0
 --win-dir-chooser
 --win-menu

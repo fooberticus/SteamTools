@@ -3,5 +3,5 @@
 --name SteamTools
 --vendor Fooberticus
 --input jars
---main-jar SteamTools-1.5.0-jar-with-dependencies.jar
+--main-jar SteamTools-1.6.0-jar-with-dependencies.jar
 --main-class com.fooberticus.steamtools.Main
