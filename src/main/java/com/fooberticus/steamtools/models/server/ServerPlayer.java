@@ -14,6 +14,8 @@ public class ServerPlayer {
             } else if (timeOnServer.length() == 7) {
                 timeOnServer = "0" + timeOnServer;
             }
+        } else {
+            timeOnServer = "--";
         }
         return timeOnServer;
     }

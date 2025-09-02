@@ -28,7 +28,7 @@ public class CommunityBanPanel extends BaseResultsPanel {
 
     public static final String STEAM_HISTORY_URI = "https://steamhistory.net/id/";
 
-    private static final String[] HEADER_ROW = {"User Name", "Steam64 ID", "Active Bans", "Total Bans", "Cheating Found", "Last Ban Date", "Last Ban Reason", "Steam History"};
+    private static final String[] HEADER_ROW = {"User Name", "Steam64 ID", "Active Bans", "Total Bans", "Cheating Bans", "Last Ban Date", "Last Ban Reason", "Steam History"};
 
     private final Map<Long, SteamPlayerSummary> steamPlayerSummaryMap;
     private final Map<Long, SteamPlayerBan> steamPlayerBanMap;
@@ -56,7 +56,7 @@ public class CommunityBanPanel extends BaseResultsPanel {
                             id,
                             0,
                             sourceBanMap.get(id).size(),
-                            false,
+                            0,
                             null,
                             null,
                             STEAM_HISTORY_URI + id ) );
@@ -70,7 +70,7 @@ public class CommunityBanPanel extends BaseResultsPanel {
                 }
 
                 if ( SteamUtils.isBanReasonCheating( ban.getBanReason() ) ) {
-                    communityUserMap.get(id).cheatingFound = true;
+                    communityUserMap.get(id).cheatingBans += 1;
                 }
 
                 LocalDate banDate = SteamUtils.getLocalDateFromTimestamp(ban.getBanTimestamp());
@@ -92,7 +92,7 @@ public class CommunityBanPanel extends BaseResultsPanel {
                     id.toString(),
                     String.valueOf( communityUserMap.get(id).activeBans ),
                     String.valueOf( communityUserMap.get(id).totalBans ),
-                    communityUserMap.get(id).cheatingFound ? "Yes" : "--",
+                    communityUserMap.get(id).cheatingBans > 0 ? communityUserMap.get(id).cheatingBans.toString() : "--",
                     SteamUtils.getLocalDateFromTimestamp( latestBanMap.get(id).getBanTimestamp() ).toString(),
                     latestBanMap.get(id).getBanReason(),
                     STEAM_HISTORY_URI + id };
@@ -110,6 +110,7 @@ public class CommunityBanPanel extends BaseResultsPanel {
 
         List<RowSorter.SortKey> sortKeys = new ArrayList<>();
         sortKeys.add(new RowSorter.SortKey(2, SortOrder.DESCENDING));
+        sortKeys.add(new RowSorter.SortKey(4, SortOrder.DESCENDING));
         sortKeys.add(new RowSorter.SortKey(3, SortOrder.DESCENDING));
         sortKeys.add(new RowSorter.SortKey(0, SortOrder.ASCENDING));
         sorter.setSortKeys(sortKeys);
@@ -136,17 +137,17 @@ public class CommunityBanPanel extends BaseResultsPanel {
         Long steam64Id;
         Integer activeBans;
         Integer totalBans;
-        Boolean cheatingFound;
+        Integer cheatingBans;
         LocalDate lastBanDate;
         String lastBanReason;
         String steamHistoryUrl;
 
-        CommunityUser(String userName, Long steam64Id, Integer activeBans, Integer totalBans, Boolean cheatingFound, LocalDate lastBanDate, String lastBanReason, String steamHistoryUrl) {
+        CommunityUser(String userName, Long steam64Id, Integer activeBans, Integer totalBans, Integer cheatingBans, LocalDate lastBanDate, String lastBanReason, String steamHistoryUrl) {
             this.userName = userName;
             this.steam64Id = steam64Id;
             this.activeBans = activeBans;
             this.totalBans = totalBans;
-            this.cheatingFound = cheatingFound;
+            this.cheatingBans = cheatingBans;
             this.lastBanDate = lastBanDate;
             this.lastBanReason = lastBanReason;
             this.steamHistoryUrl = steamHistoryUrl;

@@ -2,9 +2,9 @@ package com.fooberticus.steamtools.models.steamhistory;
 
 import lombok.Data;
 
-import java.util.List;
+import java.util.HashSet;
 
 @Data
 public class SourceBanResponse {
-    private List<SourceBan> response;
+    private HashSet<SourceBan> response;
 }

@@ -1,6 +1,7 @@
 package com.fooberticus.steamtools.utils;
 
 import com.fooberticus.steamtools.models.server.ServerPlayer;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
 import java.time.Instant;
@@ -13,6 +14,7 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@Slf4j
 public final class SteamUtils {
 
     public static final long STEAM_64_BASE = 76561197960265728L;
@@ -57,11 +59,26 @@ public final class SteamUtils {
             serverPlayer.setTimeOnServer(timeOnServer);
             result.add(serverPlayer);
         }
+
+        // fall back to just looking for user ids if user id/time on server not found
+        if (result.isEmpty()) {
+            List<Long> userIds = getUserIdsFromText(text);
+            for (Long steam64Id : userIds) {
+                ServerPlayer serverPlayer = new ServerPlayer();
+                serverPlayer.setSteam64Id(steam64Id);
+                result.add(serverPlayer);
+            }
+        }
+
         return result.stream().toList();
     }
 
     public static boolean isBanReasonCheating(final String reason) {
-        return StringUtils.containsAnyIgnoreCase(reason, "cheat", "aim", "bot", "hack", "lmaobox", "smac", "silent");
+        if (StringUtils.containsAnyIgnoreCase(reason, "cheat", "aim", "bot", "hack", "lmaobox", "smac", "silent")) {
+            log.info("Community cheat reason detected: {}", reason);
+            return true;
+        }
+        return false;
     }
 
     public static List<Long> getPlayerIdsFromServerPlayerList(final List<ServerPlayer> serverPlayers) {

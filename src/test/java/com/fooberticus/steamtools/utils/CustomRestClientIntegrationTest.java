@@ -6,6 +6,7 @@ import com.fooberticus.steamtools.models.steamhistory.SourceBanResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 
+import java.util.HashSet;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -31,7 +32,7 @@ public class CustomRestClientIntegrationTest {
 
         assertNotNull(response);
 
-        List<SourceBan> sourceBans = response.getResponse();
+        HashSet<SourceBan> sourceBans = response.getResponse();
 
         assertNotNull(sourceBans);
         assertFalse(sourceBans.isEmpty());
